@@ -230,6 +230,15 @@
               Corak geometri halus (identiti korporat Malaysia) pada banner
             </label>
 
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Lebar Paparan Halaman (Skrin Lebar / Google Sites)</label>
+              <select id="inpLayoutWidth" onchange="updateField('layoutWidth', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold bg-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                <option value="full">Lebar Penuh — Padding Sisi Minimal (Disyorkan)</option>
+                <option value="wide">Sederhana Lebar (1480px)</option>
+                <option value="boxed">Klasik Berpusat (1140px)</option>
+              </select>
+            </div>
+
             <div class="border-t border-slate-200 pt-3 space-y-2">
               <div class="flex items-center justify-between">
                 <label class="text-xs font-semibold text-slate-700">Imej Banner Tersuai (Pilihan — Ganti Latar Templat)</label>
@@ -799,6 +808,7 @@
     function getDefaultState() {
       return {
         theme: 'kkmCorporate',
+        layoutWidth: 'full',
         showPattern: true,
         customBanner: '',
         bannerOverlay: 68,
@@ -1392,6 +1402,12 @@
     // =========================================================================
     function generatePortalHTML() {
       const t = THEMES[state.theme] || THEMES.kkmCorporate;
+      const layoutWidthMap = {
+        full: { maxW: '100%', pad: '0 clamp(14px, 2vw, 32px)' },
+        wide: { maxW: '1480px', pad: '0 clamp(16px, 2.5vw, 32px)' },
+        boxed: { maxW: '1140px', pad: '0 20px' }
+      };
+      const lw = layoutWidthMap[state.layoutWidth] || layoutWidthMap.full;
       const coatSrc = normalizeImageUrl(state.coatOfArms);
       const agencyLogoSrc = normalizeImageUrl(state.agencyLogo);
       const bannerSrc = normalizeImageUrl(state.customBanner);
@@ -1748,7 +1764,7 @@
       overflow-x: hidden;
     }
     a { color: inherit; text-decoration: none; }
-    .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+    .container { width: 100%; max-width: ${lw.maxW}; margin: 0 auto; padding: ${lw.pad}; }
 
     /* Navigasi Melekit (Sticky Nav) */
     .topbar {
@@ -1764,7 +1780,7 @@
     }
     .brand-mini {
       font-weight: 800; font-size: 13px; letter-spacing: 0.03em;
-      text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px;
+      text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 420px;
       display: flex; align-items: center; gap: 10px;
     }
     .brand-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
@@ -1817,9 +1833,9 @@
     .dept-label { font-size: 14px; color: ${heroMutedCol}; margin-bottom: 14px; font-weight: 500; }
     .hero-title {
       font-size: clamp(26px, 4vw, 42px); font-weight: 800; line-height: 1.18;
-      letter-spacing: -0.02em; max-width: 860px; margin-bottom: 14px;
+      letter-spacing: -0.02em; max-width: 1180px; margin-bottom: 14px;
     }
-    .hero-sub { font-size: clamp(15px, 1.8vw, 18px); color: ${heroMutedCol}; max-width: 760px; margin-bottom: 28px; }
+    .hero-sub { font-size: clamp(15px, 1.8vw, 18px); color: ${heroMutedCol}; max-width: 960px; margin-bottom: 28px; }
 
     /* Kad Maklumat Ringkas Hero */
     .info-strip {
@@ -1881,7 +1897,7 @@
       padding: 4px 12px; border-radius: 999px; margin-bottom: 8px;
     }
     .sec-title { font-size: clamp(22px, 2.8vw, 30px); font-weight: 800; letter-spacing: -0.02em; color: var(--text); }
-    .sec-sub { font-size: 15px; color: var(--muted); margin-top: 6px; max-width: 720px; }
+    .sec-sub { font-size: 15px; color: var(--muted); margin-top: 6px; max-width: 960px; }
 
     /* Kad Undangan & RSVP */
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 22px; }
@@ -2001,7 +2017,7 @@
     }
     .pdf-title { font-size: 15px; font-weight: 800; color: var(--text); }
     .pdf-date { font-size: 12px; color: var(--muted); }
-    .pdf-stage { width: 100%; height: 600px; background: #e2e8f0; position: relative; }
+    .pdf-stage { width: 100%; height: 680px; background: #e2e8f0; position: relative; }
     .pdf-stage iframe { width: 100%; height: 100%; border: 0; display: block; }
     .pdf-empty {
       height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -2442,6 +2458,7 @@
       document.getElementById('inpCoatHeight').value = state.coatHeight || 68;
       document.getElementById('lblCoatHeight').textContent = state.coatHeight || 68;
       document.getElementById('chkSongketPattern').checked = Boolean(state.showPattern);
+      document.getElementById('inpLayoutWidth').value = state.layoutWidth || 'full';
       document.getElementById('inpOverlay').value = state.bannerOverlay || 68;
       document.getElementById('lblOverlay').textContent = state.bannerOverlay || 68;
 
