@@ -1631,9 +1631,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    /* ======================================================================
-       PORTAL MESYUARAT DIGITAL SEKTOR AWAM — CSS KENDIRI (GOOGLE SITES SAFE)
-       ====================================================================== */
     :root {
       --primary: ${t.primary};
       --primary-dark: ${t.primaryDark};
@@ -2048,8 +2045,6 @@
     ${minutesHtml}
     ${contactHtml}
   </main>
-
-  <!-- FOOTER RASMI GAYA KERAJAAN -->
   <footer class="gov-footer">
     <div class="container">
       <div class="footer-grid">
@@ -2084,7 +2079,6 @@
   </footer>
 
   <script>
-    // Navigasi skrol lancar yang selamat dalam iframe Google Sites (tanpa bergantung pada URL hash)
     function goSec(id) {
       var el = document.getElementById(id);
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2096,7 +2090,6 @@
       if (nav) nav.classList.toggle('open');
     }
 
-    // Penukar Tab Pemapar PDF Minit Mesyuarat
     var MINUTES_DATA = ${safeMinutesJson};
     function selectMinute(index, btn) {
       var item = MINUTES_DATA[index];
@@ -2130,7 +2123,6 @@
       }
     }
 
-    // Pemasa Kiraan Detik (Countdown)
     (function initCountdown() {
       var targetStr = ${JSON.stringify(state.showCountdown ? state.countdownDate : '')};
       if (!targetStr) return;
