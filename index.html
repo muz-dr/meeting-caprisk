@@ -4,13 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Penjana Portal Mesyuarat Pro — Untuk Google Sites</title>
-  <!-- Tailwind CSS untuk antaramuka Penjana (Generator UI) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <!-- SheetJS untuk sokongan muat naik & muat turun fail Excel (.xlsx) - mempunyai sandaran CSV terbina jika luar talian -->
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <script>
     tailwind.config = {
@@ -33,7 +30,6 @@
   </script>
   <style>
     body { font-family: 'Inter', system-ui, sans-serif; }
-    /* Bar skrol kemas */
     ::-webkit-scrollbar { width: 7px; height: 7px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
@@ -46,8 +42,6 @@
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 h-screen flex flex-col overflow-hidden">
-
-  <!-- ==================== BAR NAVIGASI ATAS PENJANA ==================== -->
   <header class="bg-slate-900 text-white border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between gap-3 shrink-0 z-20 shadow-md">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-amber-400 flex items-center justify-center shadow-lg shrink-0">
@@ -63,8 +57,6 @@
         <p class="text-xs text-slate-400 hidden sm:block">Hasilkan laman web mesyuarat profesional Bahasa Malaysia untuk benaman skrin penuh Google Sites</p>
       </div>
     </div>
-
-    <!-- Butang Tindakan Utama -->
     <div class="flex items-center gap-2 flex-wrap">
       <button onclick="openModal('guideModal')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-medium flex items-center gap-1.5 transition border border-slate-700 cursor-pointer">
         <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
@@ -83,20 +75,13 @@
       </button>
     </div>
   </header>
-
-  <!-- ==================== PENUKAR MOD MUDAH ALIH ==================== -->
   <div class="lg:hidden bg-white border-b border-slate-200 px-3 py-2 flex items-center gap-2 shrink-0">
     <button id="mobileTabEditor" onclick="switchMobilePane('editor')" class="flex-1 py-2 rounded-xl text-xs font-semibold bg-blue-900 text-white">1. Sunting Kandungan</button>
     <button id="mobileTabPreview" onclick="switchMobilePane('preview')" class="flex-1 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600">2. Pratonton Langsung</button>
   </div>
-
-  <!-- ==================== RUANG KERJA UTAMA (EDITOR + PRATONTON) ==================== -->
   <main class="flex-1 flex overflow-hidden relative">
-
-    <!-- PANEL KIRI: EDITOR KANDUNGAN -->
     <section id="editorPane" class="w-full lg:w-[490px] xl:w-[530px] bg-white border-r border-slate-200 flex flex-col h-full shrink-0 overflow-hidden">
       
-      <!-- Tab Bahagian Editor -->
       <div class="p-3 bg-slate-50 border-b border-slate-200 flex gap-1.5 overflow-x-auto shrink-0">
         <button onclick="switchEditorTab('identiti')" data-tab="identiti" class="editor-tab-btn tab-btn-active px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer">1. Identiti &amp; Banner</button>
         <button onclick="switchEditorTab('pautan')" data-tab="pautan" class="editor-tab-btn bg-white text-slate-600 hover:bg-slate-200/70 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition border border-slate-200 cursor-pointer">2. Undangan, RSVP &amp; Bahan</button>
@@ -105,14 +90,9 @@
         <button onclick="switchEditorTab('minit')" data-tab="minit" class="editor-tab-btn bg-white text-slate-600 hover:bg-slate-200/70 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition border border-slate-200 cursor-pointer">5. Minit (PDF)</button>
         <button onclick="switchEditorTab('hubungi')" data-tab="hubungi" class="editor-tab-btn bg-white text-slate-600 hover:bg-slate-200/70 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition border border-slate-200 cursor-pointer">6. Hubungi &amp; Footer</button>
       </div>
-
-      <!-- Borang Editor (Boleh Skrol) -->
       <div id="editorFormContainer" class="flex-1 overflow-y-auto p-4 space-y-5">
-
-        <!-- ================= TAB 1: IDENTITI, JATA & BANNER ================= -->
         <div id="tab-identiti" class="editor-panel space-y-5">
           
-          <!-- Maklumat Utama Mesyuarat -->
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-blue-600"></span> Maklumat Utama Mesyuarat
@@ -162,8 +142,6 @@
               Paparkan pemasa kiraan detik (Countdown) di bahagian Banner
             </label>
           </div>
-
-          <!-- Jata Negara & Logo Agensi (Perlindungan Nisbah Aspek!) -->
           <div class="bg-amber-50/70 rounded-2xl p-4 border border-amber-200 space-y-3">
             <div class="flex items-start justify-between gap-2">
               <div>
@@ -173,8 +151,6 @@
                 <p class="text-[11px] text-amber-800 mt-0.5">Nisbah aspek dikunci secara automatik (<code class="bg-amber-100 px-1 rounded">object-fit: contain</code>) supaya reka bentuk Jata Negara tidak pernah herot atau terpotong.</p>
               </div>
             </div>
-
-            <!-- Jata Negara -->
             <div class="bg-white rounded-xl p-3 border border-amber-200/80 space-y-2">
               <div class="flex items-center justify-between">
                 <label class="text-xs font-bold text-slate-700">Jata Negara / Coat of Arms</label>
@@ -198,8 +174,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- Logo Agensi -->
             <div class="bg-white rounded-xl p-3 border border-amber-200/80 space-y-2">
               <div class="flex items-center justify-between">
                 <label class="text-xs font-bold text-slate-700">Logo Agensi / Program (Pilihan)</label>
@@ -215,14 +189,12 @@
             </div>
           </div>
 
-          <!-- Tema & Reka Bentuk Banner -->
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-indigo-600"></span> Tema Warna &amp; Banner
             </h2>
             
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="themePresetGrid">
-              <!-- Dijana melalui JS -->
             </div>
 
             <label class="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer pt-1">
@@ -258,11 +230,8 @@
             </div>
           </div>
         </div>
-
-        <!-- ================= TAB 2: SURAT UNDANGAN, RSVP & BAHAN ================= -->
         <div id="tab-pautan" class="editor-panel hidden space-y-5">
           
-          <!-- Surat Undangan -->
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <div class="flex items-center justify-between">
               <h2 class="text-sm font-bold text-slate-800">1. Surat Undangan Rasmi</h2>
@@ -289,8 +258,6 @@
               <input id="inpInvUrl" type="url" oninput="updateNested('invitation', 'url', this.value)" placeholder="https://drive.google.com/file/d/..." class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs bg-white" />
             </div>
           </div>
-
-          <!-- Kehadiran RSVP -->
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <div class="flex items-center justify-between">
               <h2 class="text-sm font-bold text-slate-800">2. Pengesahan Kehadiran (RSVP)</h2>
@@ -317,8 +284,6 @@
               <textarea id="inpRsvpDesc" rows="2" oninput="updateNested('rsvp', 'desc', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs bg-white"></textarea>
             </div>
           </div>
-
-          <!-- Bahan Mesyuarat -->
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <div class="flex items-center justify-between">
               <h2 class="text-sm font-bold text-slate-800">3. Bahan Mesyuarat (Google Drive)</h2>
@@ -345,7 +310,6 @@
           </div>
         </div>
 
-        <!-- ================= TAB 3: AGENDA MESYUARAT ================= -->
         <div id="tab-agenda" class="editor-panel hidden space-y-4">
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <div class="flex items-center justify-between">
@@ -355,8 +319,6 @@
               </label>
             </div>
             <p class="text-xs text-slate-600">Sunting terus dalam jadual di bawah, muat naik fail Excel/CSV menggunakan templat, atau salin-tampal terus daripada Microsoft Excel / Google Sheets.</p>
-            
-            <!-- Bar Alat Import Excel / Templat -->
             <div class="flex flex-wrap gap-2">
               <button onclick="downloadAgendaTemplate()" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
@@ -375,8 +337,6 @@
               </button>
             </div>
           </div>
-
-          <!-- Jadual Interaktif Agenda -->
           <div class="space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold text-slate-700">Senarai Baris Agenda (<span id="agendaCount">0</span> item)</span>
@@ -385,11 +345,8 @@
             <div id="agendaListEditor" class="space-y-2.5"></div>
           </div>
         </div>
-
-        <!-- ================= TAB 4: TAKWIM & AHLI MESYUARAT ================= -->
         <div id="tab-takwim" class="editor-panel hidden space-y-5">
           
-          <!-- Takwim Mesyuarat -->
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <div class="flex items-center justify-between">
               <div>
@@ -406,7 +363,6 @@
             <div id="takwimListEditor" class="space-y-2"></div>
           </div>
 
-          <!-- Ahli Mesyuarat -->
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <div class="flex items-center justify-between">
               <div>
@@ -423,8 +379,6 @@
             <div id="membersListEditor" class="space-y-2"></div>
           </div>
         </div>
-
-        <!-- ================= TAB 5: MINIT MESYUARAT (PDF VIEWER) ================= -->
         <div id="tab-minit" class="editor-panel hidden space-y-4">
           <div class="bg-indigo-50 rounded-2xl p-4 border border-indigo-200 space-y-2">
             <div class="flex items-center justify-between">
@@ -445,11 +399,7 @@
 
           <div id="minutesListEditor" class="space-y-3"></div>
         </div>
-
-        <!-- ================= TAB 6: HUBUNGI KAMI & FOOTER KERAJAAN ================= -->
         <div id="tab-hubungi" class="editor-panel hidden space-y-5">
-          
-          <!-- Urus Setia / Maklum Balas -->
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <div class="flex items-center justify-between">
               <h2 class="text-sm font-bold text-slate-800">Sebarang Maklum Balas / Urus Setia</h2>
@@ -474,7 +424,6 @@
             </div>
           </div>
 
-          <!-- Footer Gaya Kerajaan -->
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <h2 class="text-sm font-bold text-slate-800">Footer Rasmi Gaya Kerajaan</h2>
             <div>
@@ -496,7 +445,6 @@
               </div>
             </div>
 
-            <!-- Logo Tambahan Footer (cth: Malaysia Madani / MS ISO / Agensi) -->
             <div class="pt-2 border-t border-slate-200 space-y-2">
               <div class="flex items-center justify-between">
                 <label class="text-xs font-bold text-slate-700">Logo Tambahan Footer (cth: Malaysia MADANI / ISO)</label>
@@ -515,10 +463,7 @@
 
       </div>
     </section>
-
-    <!-- PANEL KANAN: PRATONTON LANGSUNG (LIVE PREVIEW) -->
     <section id="previewPane" class="hidden lg:flex flex-1 flex-col bg-slate-200/80 h-full overflow-hidden">
-      <!-- Bar Alat Pratonton -->
       <div class="bg-white border-b border-slate-200 px-4 py-2 flex flex-wrap items-center justify-between gap-2 shrink-0">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -538,7 +483,6 @@
         </button>
       </div>
 
-      <!-- Bekas Iframe Pratonton -->
       <div class="flex-1 overflow-auto p-3 sm:p-5 flex justify-center items-start">
         <div id="previewFrameWrapper" class="w-full h-full bg-white rounded-2xl shadow-2xl border border-slate-300 overflow-hidden transition-all duration-300">
           <iframe id="previewFrame" title="Pratonton Portal Mesyuarat" class="w-full h-full border-0"></iframe>
@@ -548,7 +492,6 @@
 
   </main>
 
-  <!-- ==================== MODAL 1: JANA & SALIN KOD GOOGLE SITES ==================== -->
   <div id="exportModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
@@ -595,8 +538,6 @@
       </div>
     </div>
   </div>
-
-  <!-- ==================== MODAL 2: PANDUAN LENGKAP & PENUKAR PAUTAN DRIVE ==================== -->
   <div id="guideModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
@@ -608,8 +549,6 @@
       </div>
 
       <div class="p-6 overflow-y-auto space-y-5 text-sm text-slate-700">
-        
-        <!-- Bahagian 1: Tetapan Google Sites -->
         <div class="space-y-2">
           <h4 class="font-bold text-slate-900 text-base flex items-center gap-2">
             <span class="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold">1</span>
@@ -624,7 +563,6 @@
           </ul>
         </div>
 
-        <!-- Bahagian 2: Tetapan Google Drive -->
         <div class="space-y-2">
           <h4 class="font-bold text-slate-900 text-base flex items-center gap-2">
             <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">2</span>
@@ -646,8 +584,6 @@
             <br/>• Untuk <b>Jata Negara / Logo / Banner</b>: Jika anda tampal pautan imej Google Drive (mesti <i>Anyone with the link</i>), penjana menukarnya automatik kepada pautan imej terus (<code class="bg-slate-200 px-1 rounded">lh3.googleusercontent.com/d/ID</code>).
           </p>
         </div>
-
-        <!-- Bahagian 3: Alat Semak & Tukar Pautan Google Drive -->
         <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 space-y-2.5">
           <h4 class="font-bold text-indigo-950 text-sm">Alat Uji Penukar Pautan Google Drive</h4>
           <input id="driveHelperInput" type="text" oninput="runDriveHelper(this.value)" placeholder="Tampal sebarang pautan Google Drive di sini untuk melihat format embed..." class="w-full rounded-xl border border-indigo-300 px-3 py-2 text-xs bg-white" />
@@ -658,7 +594,6 @@
     </div>
   </div>
 
-  <!-- ==================== MODAL 3: TAMPAL AGENDA DARI EXCEL ==================== -->
   <div id="pasteAgendaModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl overflow-hidden">
       <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
@@ -675,8 +610,6 @@
       </div>
     </div>
   </div>
-
-  <!-- ==================== MODAL 4: SIMPAN / MUAT PROJEK JSON ==================== -->
   <div id="projectModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden">
       <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
@@ -700,15 +633,10 @@
       </div>
     </div>
   </div>
-
-  <!-- ==================== NOTIFIKASI TOAST (TANPA ALERT) ==================== -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-[60] flex flex-col gap-2 pointer-events-none"></div>
 
-  <!-- ==================== LOGIK PENJANA & TEMPLAT HTML ==================== -->
   <script>
-    // =========================================================================
-    // 1. DEFINISI TEMA KORPORAT KERAJAAN MALAYSIA & KKM
-    // =========================================================================
+
     const THEMES = {
       kkmCorporate: {
         name: 'Korporat KKM',
@@ -802,9 +730,6 @@
       }
     };
 
-    // =========================================================================
-    // 2. DATA CONTOH AWAL (KEMENTERIAN KESIHATAN MALAYSIA - KKM)
-    // =========================================================================
     function getDefaultState() {
       return {
         theme: 'kkmCorporate',
@@ -921,9 +846,6 @@
     let state = getDefaultState();
     let previewTimer = null;
 
-    // =========================================================================
-    // 3. FUNGSI UTILITI (PENUKAR PAUTAN GOOGLE DRIVE, SANITASI & TOAST)
-    // =========================================================================
     function esc(str) {
       if (str === null || str === undefined) return '';
       return String(str)
@@ -933,8 +855,6 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
     }
-
-    // Ekstrak ID fail daripada pelbagai format URL Google Drive
     function extractDriveFileId(url) {
       if (!url) return null;
       const trimmed = url.trim();
@@ -950,8 +870,6 @@
       }
       return null;
     }
-
-    // Tukar pautan Google Drive imej kepada URL imej terus yang berfungsi dalam <img>
     function normalizeImageUrl(url) {
       if (!url) return '';
       if (url.startsWith('data:image/')) return url;
@@ -960,7 +878,6 @@
       return url.trim();
     }
 
-    // Tukar pautan Google Drive PDF kepada URL /preview yang boleh dibenam dalam <iframe>
     function getPdfEmbedUrl(url) {
       if (!url) return '';
       const trimmed = url.trim();
@@ -1010,9 +927,6 @@
       }, 3000);
     }
 
-    // =========================================================================
-    // 4. PENGENDALI MUAT NAIK IMEJ (DIOPTIMUMKAN & KUNCI NISBAH ASPEK)
-    // =========================================================================
     function handleImageUpload(event, fieldName, maxDim) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
@@ -1021,7 +935,6 @@
         const img = new Image();
         img.onload = function() {
           try {
-            // Kira saiz optimum tanpa mengubah nisbah aspek asal walau 1 piksel pun!
             let w = img.naturalWidth;
             let h = img.naturalHeight;
             if (w > maxDim || h > maxDim) {
@@ -1037,7 +950,6 @@
             ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(img, 0, 0, w, h);
 
-            // Kekalkan PNG telus untuk Jata Negara & Logo; gunakan JPEG/WebP ringan untuk banner besar
             const isBanner = fieldName === 'customBanner';
             const dataUrl = isBanner
               ? canvas.toDataURL('image/jpeg', 0.82)
@@ -1085,9 +997,6 @@
       });
     }
 
-    // =========================================================================
-    // 5. PENGENDALI BORANG & SENARAI DINAMIK
-    // =========================================================================
     function updateField(key, val) {
       state[key] = val;
       schedulePreview();
@@ -1117,7 +1026,6 @@
       schedulePreview();
     }
 
-    // --- Bahan Mesyuarat ---
     function renderMaterialsEditor() {
       const box = document.getElementById('materialsListEditor');
       box.innerHTML = state.materials.items.map((item, idx) => `
@@ -1139,7 +1047,6 @@
       schedulePreview();
     }
 
-    // --- Agenda Mesyuarat ---
     function renderAgendaEditor() {
       document.getElementById('agendaCount').textContent = state.agenda.length;
       const box = document.getElementById('agendaListEditor');
@@ -1172,8 +1079,6 @@
       renderAgendaEditor();
       schedulePreview();
     }
-
-    // Muat turun Templat Excel / CSV Agenda
     function downloadAgendaTemplate() {
       const rows = [
         ['Bil', 'Masa', 'Perkara / Agenda', 'Pembentang / Tindakan'],
@@ -1200,7 +1105,6 @@
       showToast('Templat CSV berjaya dimuat turun!');
     }
 
-    // Muat naik Excel (.xlsx/.xls) atau CSV untuk Agenda
     function handleAgendaUpload(event) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
@@ -1306,8 +1210,6 @@
         showToast(`Berjaya mengimport ${imported.length} baris agenda!`);
       }
     }
-
-    // --- Takwim ---
     function renderTakwimEditor() {
       const box = document.getElementById('takwimListEditor');
       box.innerHTML = state.takwim.map((item, idx) => `
@@ -1330,7 +1232,6 @@
       schedulePreview();
     }
 
-    // --- Ahli Mesyuarat ---
     function renderMembersEditor() {
       const box = document.getElementById('membersListEditor');
       box.innerHTML = state.members.map((m, idx) => `
@@ -1350,7 +1251,7 @@
       schedulePreview();
     }
 
-    // --- Minit Mesyuarat (PDF) ---
+
     function renderMinutesEditor() {
       const box = document.getElementById('minutesListEditor');
       box.innerHTML = state.minutes.map((m, idx) => `
@@ -1374,7 +1275,7 @@
       schedulePreview();
     }
 
-    // --- Pegawai Urus Setia ---
+
     function renderContactsEditor() {
       const box = document.getElementById('contactsListEditor');
       box.innerHTML = state.contact.people.map((p, idx) => `
@@ -1397,9 +1298,6 @@
       schedulePreview();
     }
 
-    // =========================================================================
-    // 6. PENJANA KOD HTML PORTAL MESYUARAT (100% KENDIRI UNTUK GOOGLE SITES!)
-    // =========================================================================
     function generatePortalHTML() {
       const t = THEMES[state.theme] || THEMES.kkmCorporate;
       const layoutWidthMap = {
@@ -1413,7 +1311,7 @@
       const bannerSrc = normalizeImageUrl(state.customBanner);
       const footerLogoSrc = normalizeImageUrl(state.footerLogo);
 
-      // Pautan navigasi dinamik mengikut bahagian yang aktif
+
       const navLinks = [];
       if (state.sections.invitation || state.sections.rsvp) navLinks.push({ id: 'tindakan', label: 'Undangan & RSVP' });
       if (state.sections.materials) navLinks.push({ id: 'bahan', label: 'Bahan Mesyuarat' });
@@ -1423,7 +1321,7 @@
       if (state.sections.minutes) navLinks.push({ id: 'minit', label: 'Minit (PDF)' });
       if (state.sections.contact) navLinks.push({ id: 'hubungi', label: 'Hubungi Kami' });
 
-      // SVG Corak Songket / Geometri Korporat Halus (vektor ringan, tiada imej luar)
+
       const patternCss = state.showPattern ? `
         .hero-pattern {
           position: absolute; inset: 0; pointer-events: none; opacity: ${t.isLightHero && !bannerSrc ? '0.07' : '0.11'};
@@ -1437,7 +1335,7 @@
         ? `background: linear-gradient(rgba(9, 18, 36, ${(state.bannerOverlay / 100).toFixed(2)}), rgba(9, 18, 36, ${Math.min(0.95, (state.bannerOverlay / 100) + 0.1).toFixed(2)})), url('${esc(bannerSrc)}') center/cover no-repeat;`
         : `background: ${t.heroBg};`;
 
-      // Ikon SVG Jata / Perisai contoh jika pengguna belum muat naik Jata Negara
+
       const defaultEmblemSvg = `
         <div class="emblem-placeholder" title="Muat naik Jata Negara rasmi di Penjana">
           <svg viewBox="0 0 48 48" width="38" height="38" fill="none" stroke="currentColor" stroke-width="2">
@@ -1446,7 +1344,7 @@
           </svg>
         </div>`;
 
-      // HTML Jata Negara + Logo Agensi (DIKUNCI NISBAH ASPEK!)
+
       const coatHeight = Number(state.coatHeight) || 68;
       const crestsHtml = `
         <div class="crest-row">
@@ -1463,7 +1361,7 @@
             : ''}
         </div>`;
 
-      // Bahagian Undangan & RSVP
+
       const actionSectionHtml = (state.sections.invitation || state.sections.rsvp) ? `
       <section id="tindakan" class="sec">
         <div class="container">
@@ -1518,7 +1416,7 @@
         </div>
       </section>` : '';
 
-      // Bahagian Bahan Mesyuarat
+
       const materialsHtml = state.sections.materials ? `
       <section id="bahan" class="sec sec-alt">
         <div class="container">
@@ -1549,7 +1447,7 @@
         </div>
       </section>` : '';
 
-      // Bahagian Agenda Mesyuarat
+
       const agendaHtml = state.sections.agenda ? `
       <section id="agenda" class="sec">
         <div class="container">
@@ -1581,7 +1479,7 @@
         </div>
       </section>` : '';
 
-      // Bahagian Takwim Mesyuarat
+
       const statusClassMap = {
         'Semasa': 'st-current',
         'Akan Datang': 'st-upcoming',
@@ -1610,7 +1508,6 @@
         </div>
       </section>` : '';
 
-      // Bahagian Ahli Mesyuarat
       const membersHtml = state.sections.members ? `
       <section id="ahli" class="sec">
         <div class="container">
@@ -1635,7 +1532,7 @@
         </div>
       </section>` : '';
 
-      // Bahagian Minit Mesyuarat (Pemapar PDF Terbina!)
+
       const minutesListData = state.minutes.map(m => ({
         title: m.title,
         date: m.date,
@@ -1684,7 +1581,6 @@
         </div>
       </section>` : '';
 
-      // Bahagian Maklum Balas / Hubungi Kami
       const contactHtml = state.sections.contact ? `
       <section id="hubungi" class="sec">
         <div class="container">
@@ -1723,7 +1619,6 @@
         </div>
       </section>` : '';
 
-      // Data JSON selamat untuk pemapar PDF & Countdown di dalam portal terjana
       const safeMinutesJson = JSON.stringify(minutesListData).replace(/</g, '\\u003c');
 
       return `<!DOCTYPE html>
@@ -2270,9 +2165,7 @@
 </html>`;
     }
 
-    // =========================================================================
-    // 7. PRATONTON LANGSUNG, EKSPORT KOD & PROJEK JSON
-    // =========================================================================
+
     function schedulePreview() {
       clearTimeout(previewTimer);
       previewTimer = setTimeout(updatePreviewNow, 180);
@@ -2325,7 +2218,7 @@
       openModal('exportModal');
     }
 
-    // Salin kod menggunakan document.execCommand('copy') agar serasi dengan sekatan iframe
+
     function copyGeneratedCode() {
       const textarea = document.getElementById('generatedCodeOutput');
       textarea.select();
@@ -2390,9 +2283,7 @@
       setTimeout(() => URL.revokeObjectURL(a.href), 1500);
     }
 
-    // =========================================================================
-    // 8. NAVIGASI TAB & MODAL ANTARAMUKA PENJANA
-    // =========================================================================
+
     function switchEditorTab(tabId) {
       document.querySelectorAll('.editor-panel').forEach(p => p.classList.add('hidden'));
       const panel = document.getElementById(`tab-${tabId}`);
@@ -2440,9 +2331,7 @@
       if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
     }
 
-    // =========================================================================
-    // 9. INISIALISASI BORANG DARI STATE
-    // =========================================================================
+
     function hydrateAllInputs() {
       document.getElementById('inpAgency').value = state.agency || '';
       document.getElementById('inpDept').value = state.dept || '';
@@ -2502,7 +2391,7 @@
       renderContactsEditor();
     }
 
-    // Mulakan aplikasi semasa halaman siap dimuat
+
     window.addEventListener('DOMContentLoaded', () => {
       hydrateAllInputs();
       updatePreviewNow();
