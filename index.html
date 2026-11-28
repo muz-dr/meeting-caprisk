@@ -9,20 +9,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
           colors: {
-            brand: {
-              50: '#eef4ff',
-              100: '#d9e6ff',
-              500: '#2563eb',
-              600: '#1d4ed8',
-              700: '#1e3a8a',
-              900: '#0f172a'
-            }
+            brand: { 50: '#eef4ff', 100: '#d9e6ff', 500: '#2563eb', 600: '#1d4ed8', 700: '#1e3a8a', 900: '#0f172a' }
           }
         }
       }
@@ -34,11 +28,8 @@
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    .tab-btn-active {
-      background: #1e3a8a;
-      color: #ffffff;
-      box-shadow: 0 2px 6px rgba(30, 58, 138, 0.25);
-    }
+    .tab-btn-active { background: #1e3a8a; color: #ffffff; box-shadow: 0 2px 6px rgba(30, 58, 138, 0.25); }
+    .mode-btn-active { background: #1e3a8a; color: #ffffff; border-color: #1e3a8a; box-shadow: 0 2px 8px rgba(30, 58, 138, 0.25); }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 h-screen flex flex-col overflow-hidden">
@@ -54,7 +45,7 @@
           <h1 class="font-bold text-base sm:text-lg tracking-tight leading-tight">CaPRiSK Meeting Sites HTML Generator</h1>
           <span class="hidden sm:inline-block text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">Google Sites Ready</span>
         </div>
-        <p class="text-xs text-slate-400 hidden sm:block">Hasilkan laman web mesyuarat profesional Bahasa Malaysia untuk benaman skrin penuh Google Sites</p>
+        <p class="text-xs text-slate-400 hidden sm:block">Hasilkan laman web mesyuarat Fizikal, Dalam Talian &amp; Hibrid untuk benaman skrin penuh Google Sites</p>
       </div>
     </div>
     <div class="flex items-center gap-2 flex-wrap">
@@ -62,37 +53,36 @@
         <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
         <span>Panduan &amp; Drive</span>
       </button>
-
       <button onclick="openModal('projectModal')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-medium flex items-center gap-1.5 transition border border-slate-700 cursor-pointer">
         <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
         <span class="hidden md:inline">Simpan / Muat Projek</span>
         <span class="md:hidden">Projek</span>
       </button>
-
       <button onclick="openExportModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs sm:text-sm font-semibold flex items-center gap-1.5 shadow-lg shadow-blue-900/40 transition cursor-pointer">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
         <span>Jana &amp; Salin Kod HTML</span>
       </button>
     </div>
   </header>
+
   <div class="lg:hidden bg-white border-b border-slate-200 px-3 py-2 flex items-center gap-2 shrink-0">
     <button id="mobileTabEditor" onclick="switchMobilePane('editor')" class="flex-1 py-2 rounded-xl text-xs font-semibold bg-blue-900 text-white">1. Sunting Kandungan</button>
     <button id="mobileTabPreview" onclick="switchMobilePane('preview')" class="flex-1 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600">2. Pratonton Langsung</button>
   </div>
+
   <main class="flex-1 flex overflow-hidden relative">
-    <section id="editorPane" class="w-full lg:w-[490px] xl:w-[530px] bg-white border-r border-slate-200 flex flex-col h-full shrink-0 overflow-hidden">
-      
+    <section id="editorPane" class="w-full lg:w-[495px] xl:w-[540px] bg-white border-r border-slate-200 flex flex-col h-full shrink-0 overflow-hidden">
       <div class="p-3 bg-slate-50 border-b border-slate-200 flex gap-1.5 overflow-x-auto shrink-0">
-        <button onclick="switchEditorTab('identiti')" data-tab="identiti" class="editor-tab-btn tab-btn-active px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer">1. Identiti &amp; Banner</button>
+        <button onclick="switchEditorTab('identiti')" data-tab="identiti" class="editor-tab-btn tab-btn-active px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer">1. Identiti &amp; Mod</button>
         <button onclick="switchEditorTab('pautan')" data-tab="pautan" class="editor-tab-btn bg-white text-slate-600 hover:bg-slate-200/70 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition border border-slate-200 cursor-pointer">2. Undangan, RSVP &amp; Bahan</button>
         <button onclick="switchEditorTab('agenda')" data-tab="agenda" class="editor-tab-btn bg-white text-slate-600 hover:bg-slate-200/70 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition border border-slate-200 cursor-pointer">3. Agenda</button>
         <button onclick="switchEditorTab('takwim')" data-tab="takwim" class="editor-tab-btn bg-white text-slate-600 hover:bg-slate-200/70 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition border border-slate-200 cursor-pointer">4. Takwim &amp; Ahli</button>
         <button onclick="switchEditorTab('minit')" data-tab="minit" class="editor-tab-btn bg-white text-slate-600 hover:bg-slate-200/70 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition border border-slate-200 cursor-pointer">5. Minit (PDF)</button>
         <button onclick="switchEditorTab('hubungi')" data-tab="hubungi" class="editor-tab-btn bg-white text-slate-600 hover:bg-slate-200/70 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition border border-slate-200 cursor-pointer">6. Hubungi &amp; Footer</button>
       </div>
+
       <div id="editorFormContainer" class="flex-1 overflow-y-auto p-4 space-y-5">
         <div id="tab-identiti" class="editor-panel space-y-5">
-          
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-blue-600"></span> Maklumat Utama Mesyuarat
@@ -123,10 +113,6 @@
                 <input id="inpTimeText" type="text" oninput="updateField('timeText', this.value)" placeholder="9.00 Pagi – 1.00 Tengah Hari" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm bg-white" />
               </div>
             </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Tempat / Mod Mesyuarat</label>
-              <input id="inpVenue" type="text" oninput="updateField('venue', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm bg-white" />
-            </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs font-semibold text-slate-600 mb-1">Pengerusi Mesyuarat</label>
@@ -142,14 +128,122 @@
               Paparkan pemasa kiraan detik (Countdown) di bahagian Banner
             </label>
           </div>
-          <div class="bg-amber-50/70 rounded-2xl p-4 border border-amber-200 space-y-3">
-            <div class="flex items-start justify-between gap-2">
+
+          <div class="bg-sky-50/70 rounded-2xl p-4 border border-sky-200 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-sky-600"></span> Mod Mesyuarat, Platform Talian &amp; Kod QR
+              </h2>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" onclick="setMeetingMode('physical')" data-mode="physical" class="mode-btn px-2.5 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold transition cursor-pointer">Fizikal</button>
+              <button type="button" onclick="setMeetingMode('online')" data-mode="online" class="mode-btn px-2.5 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold transition cursor-pointer">Dalam Talian</button>
+              <button type="button" onclick="setMeetingMode('hybrid')" data-mode="hybrid" class="mode-btn px-2.5 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold transition cursor-pointer">Hibrid</button>
+            </div>
+
+            <div id="physicalVenueWrap" class="bg-white rounded-xl p-3 border border-sky-200/80 space-y-2.5">
+              <div class="text-xs font-bold text-slate-700">Lokasi Kehadiran Fizikal</div>
               <div>
-                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-amber-500"></span> Jata Negara &amp; Logo Agensi
-                </h2>
-                <p class="text-[11px] text-amber-800 mt-0.5">Nisbah aspek dikunci secara automatik (<code class="bg-amber-100 px-1 rounded">object-fit: contain</code>) supaya reka bentuk Jata Negara tidak pernah herot atau terpotong.</p>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Tempat / Bilik Mesyuarat</label>
+                <input id="inpVenue" type="text" oninput="updateField('venue', this.value)" placeholder="Bilik Mesyuarat Utama, Aras 4, Blok E1..." class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white" />
               </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Pautan Peta Lokasi — Google Maps / Waze (Pilihan)</label>
+                <input id="inpMapUrl" type="url" oninput="updateField('mapUrl', this.value)" placeholder="https://maps.google.com/..." class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white" />
+              </div>
+            </div>
+
+            <div id="onlineMeetingWrap" class="bg-white rounded-xl p-3 border border-sky-200/80 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-sky-900">Tetapan Platform Dalam Talian</span>
+                <label class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600 cursor-pointer">
+                  <input id="chkShowOnlineSection" type="checkbox" onchange="updateNested('sections', 'onlineAccess', this.checked)" class="rounded w-3.5 h-3.5" /> Papar Seksyen Akses
+                </label>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-600 mb-1">Platform Mesyuarat</label>
+                  <select id="inpOnlinePlatform" onchange="onPlatformChange(this.value)" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs font-semibold bg-white">
+                    <option value="Google Meet">Google Meet</option>
+                    <option value="Microsoft Teams">Microsoft Teams</option>
+                    <option value="Zoom">Zoom</option>
+                    <option value="Cisco Webex">Cisco Webex</option>
+                    <option value="Lain-lain">Lain-lain</option>
+                  </select>
+                </div>
+                <div id="customPlatformWrap" class="hidden">
+                  <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Platform Tersuai</label>
+                  <input id="inpCustomPlatform" type="text" oninput="updateNested('online', 'customPlatform', this.value)" placeholder="cth: Jitsi / MyGovUC" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white" />
+                </div>
+                <div id="onlineBtnTextWrap">
+                  <label class="block text-[11px] font-semibold text-slate-600 mb-1">Teks Butang Sertai</label>
+                  <input id="inpOnlineBtnText" type="text" oninput="updateNested('online', 'btnText', this.value)" placeholder="Sertai Google Meet" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white" />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Pautan Mesyuarat (URL Sertai)</label>
+                <input id="inpOnlineUrl" type="url" oninput="onOnlineUrlChange(this.value)" placeholder="https://meet.google.com/xxx-xxxx-xxx" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white" />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-600 mb-1">ID / Kod Mesyuarat (Pilihan)</label>
+                  <input id="inpOnlineId" type="text" oninput="updateNested('online', 'meetingId', this.value)" placeholder="cth: abc-defg-hij" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white" />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-600 mb-1">Kata Laluan / PIN (Pilihan)</label>
+                  <input id="inpOnlinePass" type="text" oninput="updateNested('online', 'passcode', this.value)" placeholder="Biarkan kosong jika tiada" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white" />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nota / Etika Kehadiran Dalam Talian (Pilihan)</label>
+                <textarea id="inpOnlineNote" rows="2" oninput="updateNested('online', 'note', this.value)" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white"></textarea>
+              </div>
+
+              <div class="border-t border-slate-200 pt-2.5 space-y-2.5">
+                <div class="flex items-center justify-between gap-2">
+                  <label class="text-xs font-bold text-slate-700">Kod QR Sertai Mesyuarat</label>
+                  <select id="inpQrMode" onchange="onQrModeChange(this.value)" class="rounded-lg border border-slate-300 px-2 py-1 text-[11px] font-semibold bg-slate-50">
+                    <option value="auto">Auto-Jana dari Pautan</option>
+                    <option value="upload">Muat Naik Imej / Drive</option>
+                    <option value="none">Tiada Kod QR</option>
+                  </select>
+                </div>
+
+                <div id="qrUploadWrap" class="hidden space-y-2">
+                  <div class="flex gap-2">
+                    <input id="inpQrImageUrl" type="text" oninput="updateOnlineQrUrl(this.value)" placeholder="Tampal pautan Google Drive / URL imej QR..." class="flex-1 rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white" />
+                    <label class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold cursor-pointer shrink-0">
+                      <span>Muat Naik</span>
+                      <input type="file" accept="image/png,image/svg+xml,image/webp,image/jpeg" onchange="handleQrUpload(event)" class="hidden" />
+                    </label>
+                  </div>
+                  <div class="flex justify-end">
+                    <button type="button" onclick="clearQrImage()" class="text-[11px] text-rose-600 hover:underline font-medium cursor-pointer">Padam Imej QR</button>
+                  </div>
+                </div>
+
+                <div id="qrCaptionWrap" class="flex items-center gap-3">
+                  <div id="editorQrPreview" class="w-16 h-16 rounded-xl border border-slate-200 bg-white p-1.5 flex items-center justify-center shrink-0 overflow-hidden"></div>
+                  <div class="flex-1 space-y-1">
+                    <label class="block text-[11px] font-semibold text-slate-600">Kapsyen Kod QR</label>
+                    <input id="inpQrCaption" type="text" oninput="updateNested('online', 'qrCaption', this.value)" placeholder="Imbas untuk sertai mesyuarat" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-amber-50/70 rounded-2xl p-4 border border-amber-200 space-y-3">
+            <div>
+              <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span> Jata Negara &amp; Logo Agensi
+              </h2>
+              <p class="text-[11px] text-amber-800 mt-0.5">Nisbah aspek dikunci secara automatik (<code class="bg-amber-100 px-1 rounded">object-fit: contain</code>) supaya reka bentuk Jata Negara tidak pernah herot atau terpotong.</p>
             </div>
             <div class="bg-white rounded-xl p-3 border border-amber-200/80 space-y-2">
               <div class="flex items-center justify-between">
@@ -193,15 +287,11 @@
             <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-indigo-600"></span> Tema Warna &amp; Banner
             </h2>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="themePresetGrid">
-            </div>
-
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="themePresetGrid"></div>
             <label class="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer pt-1">
               <input id="chkSongketPattern" type="checkbox" onchange="updateField('showPattern', this.checked)" class="rounded w-4 h-4" />
               Corak geometri halus (identiti korporat Malaysia) pada banner
             </label>
-
             <div>
               <label class="block text-xs font-semibold text-slate-600 mb-1">Lebar Paparan Halaman (Skrin Lebar / Google Sites)</label>
               <select id="inpLayoutWidth" onchange="updateField('layoutWidth', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold bg-white focus:ring-2 focus:ring-indigo-500 outline-none">
@@ -210,7 +300,6 @@
                 <option value="boxed">Klasik Berpusat (1140px)</option>
               </select>
             </div>
-
             <div class="border-t border-slate-200 pt-3 space-y-2">
               <div class="flex items-center justify-between">
                 <label class="text-xs font-semibold text-slate-700">Imej Banner Tersuai (Pilihan — Ganti Latar Templat)</label>
@@ -230,8 +319,8 @@
             </div>
           </div>
         </div>
+
         <div id="tab-pautan" class="editor-panel hidden space-y-5">
-          
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <div class="flex items-center justify-between">
               <h2 class="text-sm font-bold text-slate-800">1. Surat Undangan Rasmi</h2>
@@ -258,6 +347,7 @@
               <input id="inpInvUrl" type="url" oninput="updateNested('invitation', 'url', this.value)" placeholder="https://drive.google.com/file/d/..." class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs bg-white" />
             </div>
           </div>
+
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <div class="flex items-center justify-between">
               <h2 class="text-sm font-bold text-slate-800">2. Pengesahan Kehadiran (RSVP)</h2>
@@ -284,6 +374,7 @@
               <textarea id="inpRsvpDesc" rows="2" oninput="updateNested('rsvp', 'desc', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs bg-white"></textarea>
             </div>
           </div>
+
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <div class="flex items-center justify-between">
               <h2 class="text-sm font-bold text-slate-800">3. Bahan Mesyuarat (Google Drive)</h2>
@@ -299,7 +390,6 @@
               <label class="block text-xs font-semibold text-slate-600 mb-1">Nota Akses (cth: Hanya untuk ahli berdaftar / umum)</label>
               <input id="inpMatNote" type="text" oninput="updateNested('materials', 'note', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs bg-white" />
             </div>
-
             <div class="pt-2 border-t border-slate-200">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-bold text-slate-700">Senarai Dokumen / Kertas Kerja Khusus</span>
@@ -324,13 +414,11 @@
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                 Muat Turun Templat Excel
               </button>
-
               <label class="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                 <span>Muat Naik Excel / CSV</span>
                 <input type="file" accept=".xlsx,.xls,.csv" onchange="handleAgendaUpload(event)" class="hidden" />
               </label>
-
               <button onclick="openModal('pasteAgendaModal')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
                 Tampal dari Excel
@@ -345,8 +433,8 @@
             <div id="agendaListEditor" class="space-y-2.5"></div>
           </div>
         </div>
+
         <div id="tab-takwim" class="editor-panel hidden space-y-5">
-          
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <div class="flex items-center justify-between">
               <div>
@@ -379,6 +467,7 @@
             <div id="membersListEditor" class="space-y-2"></div>
           </div>
         </div>
+
         <div id="tab-minit" class="editor-panel hidden space-y-4">
           <div class="bg-indigo-50 rounded-2xl p-4 border border-indigo-200 space-y-2">
             <div class="flex items-center justify-between">
@@ -391,14 +480,13 @@
               Tampal pautan kongsi Google Drive fail PDF anda (cth: <code class="bg-white/80 px-1 rounded">https://drive.google.com/file/d/ID_FAIL/view?usp=sharing</code>). Penjana ini akan <b>menukarkannya secara automatik</b> kepada mod <code class="bg-white/80 px-1 rounded">/preview</code> supaya dokumen PDF boleh dibaca terus di dalam laman web!
             </p>
           </div>
-
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-slate-700">Senarai Fail Minit Mesyuarat</span>
             <button onclick="addMinuteItem()" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold cursor-pointer">+ Tambah Minit</button>
           </div>
-
           <div id="minutesListEditor" class="space-y-3"></div>
         </div>
+
         <div id="tab-hubungi" class="editor-panel hidden space-y-5">
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
             <div class="flex items-center justify-between">
@@ -444,7 +532,6 @@
                 <input id="inpFooterUpdated" type="text" oninput="updateNested('footer', 'updated', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs bg-white" />
               </div>
             </div>
-
             <div class="pt-2 border-t border-slate-200 space-y-2">
               <div class="flex items-center justify-between">
                 <label class="text-xs font-bold text-slate-700">Logo Tambahan Footer (cth: Malaysia MADANI / ISO)</label>
@@ -460,9 +547,9 @@
             </div>
           </div>
         </div>
-
       </div>
     </section>
+
     <section id="previewPane" class="hidden lg:flex flex-1 flex-col bg-slate-200/80 h-full overflow-hidden">
       <div class="bg-white border-b border-slate-200 px-4 py-2 flex flex-wrap items-center justify-between gap-2 shrink-0">
         <div class="flex items-center gap-2">
@@ -470,26 +557,22 @@
           <span class="text-xs font-bold text-slate-700">Pratonton Langsung</span>
           <span id="codeSizeBadge" class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">Saiz: ~24 KB</span>
         </div>
-
         <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
           <button onclick="setViewport('desktop')" id="vpDesktop" class="vp-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-white text-slate-800 shadow-sm cursor-pointer">Desktop</button>
           <button onclick="setViewport('tablet')" id="vpTablet" class="vp-btn px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-500 hover:text-slate-800 cursor-pointer">Tablet</button>
           <button onclick="setViewport('mobile')" id="vpMobile" class="vp-btn px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-500 hover:text-slate-800 cursor-pointer">Telefon</button>
         </div>
-
         <button onclick="openFullPreviewTab()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5 cursor-pointer">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
           Buka Tab Penuh
         </button>
       </div>
-
       <div class="flex-1 overflow-auto p-3 sm:p-5 flex justify-center items-start">
         <div id="previewFrameWrapper" class="w-full h-full bg-white rounded-2xl shadow-2xl border border-slate-300 overflow-hidden transition-all duration-300">
           <iframe id="previewFrame" title="Pratonton Portal Mesyuarat" class="w-full h-full border-0"></iframe>
         </div>
       </div>
     </section>
-
   </main>
 
   <div id="exportModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
@@ -497,20 +580,16 @@
       <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
         <div>
           <h3 class="font-bold text-base">Kod HTML Siap untuk Google Sites (Full Page Embed)</h3>
-          <p class="text-xs text-slate-300">Kod ini 100% kendiri (tiada fail CSS/JS luar) supaya tidak rosak dalam iframe Google Sites.</p>
+          <p class="text-xs text-slate-300">Kod ini 100% kendiri (termasuk kod QR SVG terbina) supaya tidak rosak dalam iframe Google Sites.</p>
         </div>
         <button onclick="closeModal('exportModal')" class="p-2 rounded-xl hover:bg-slate-800 text-slate-300 cursor-pointer">✕</button>
       </div>
-
       <div class="p-5 overflow-y-auto space-y-4 flex-1">
         <div id="exportSizeWarning" class="hidden rounded-xl bg-amber-50 border border-amber-200 p-3 text-xs text-amber-900">
           <b>Nota Saiz Fail:</b> Imej yang dimuat naik terus daripada PC menjadikan kod agak panjang. Jika Google Sites lambat semasa menampal kod, anda disyorkan memuat naik imej ke Google Drive dan tampal pautan Google Drive imej tersebut.
         </div>
-
         <div class="flex flex-wrap items-center justify-between gap-2">
-          <div class="text-xs text-slate-600">
-            Saiz Kod Dijana: <b id="exportSizeText" class="text-slate-900">0 KB</b>
-          </div>
+          <div class="text-xs text-slate-600">Saiz Kod Dijana: <b id="exportSizeText" class="text-slate-900">0 KB</b></div>
           <div class="flex flex-wrap gap-2">
             <button onclick="copyGeneratedCode()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow cursor-pointer">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
@@ -522,32 +601,30 @@
             </button>
           </div>
         </div>
-
         <textarea id="generatedCodeOutput" readonly rows="13" class="w-full rounded-xl bg-slate-950 text-emerald-300 font-mono text-[11px] p-4 border border-slate-800 focus:outline-none"></textarea>
-
         <div class="rounded-xl bg-blue-50 border border-blue-200 p-4 text-xs text-blue-950 space-y-1.5">
           <p class="font-bold">Langkah Pantas Memasukkan ke Google Sites sebagai Laman Utama:</p>
           <ol class="list-decimal list-inside space-y-1 text-blue-900">
             <li>Buka <b>sites.google.com</b> dan cipta laman baharu.</li>
-            <li>Di panel kanan, klik tab <b>Pages</b> &rarr; tekan ikon <b>+</b> (hover pada butang +) &rarr; pilih <b>Full page embed</b>.</li>
-            <li>Namakan halaman (cth: <i>Utama</i>), kemudian klik <b>Add embed</b> &rarr; pilih tab <b>Embed code</b> &rarr; tampal kod yang disalin di atas &rarr; klik <b>Next</b> &rarr; <b>Insert</b>.</li>
-            <li>Untuk menjadikannya <b>Home Page</b>: Di tab <b>Pages</b>, klik ikon 3 titik (⋮) pada halaman baharu tersebut &rarr; pilih <b>Make homepage</b> (dan padam halaman Home asal yang kosong).</li>
+            <li>Di panel kanan, klik tab <b>Pages</b> &rarr; tekan ikon <b>+</b> &rarr; pilih <b>Full page embed</b>.</li>
+            <li>Namakan halaman (cth: <i>Utama</i>), klik <b>Add embed</b> &rarr; pilih tab <b>Embed code</b> &rarr; tampal kod &rarr; klik <b>Next</b> &rarr; <b>Insert</b>.</li>
+            <li>Di tab <b>Pages</b>, klik ikon 3 titik (⋮) pada halaman baharu tersebut &rarr; pilih <b>Make homepage</b>.</li>
             <li>Klik <b>Publish</b> dan kongsikan pautan laman web anda!</li>
           </ol>
         </div>
       </div>
     </div>
   </div>
+
   <div id="guideModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
         <div>
-          <h3 class="font-bold text-base">Panduan Persediaan Google Sites &amp; Pautan Google Drive</h3>
-          <p class="text-xs text-slate-300">Rujukan pantas untuk Urus Setia menyediakan bahan, imej, dan tetapan perkongsian</p>
+          <h3 class="font-bold text-base">Panduan Persediaan Google Sites, Mod Hibrid/Talian &amp; Drive</h3>
+          <p class="text-xs text-slate-300">Rujukan pantas untuk Urus Setia menyediakan bahan, pautan talian, kod QR &amp; perkongsian</p>
         </div>
         <button onclick="closeModal('guideModal')" class="p-2 rounded-xl hover:bg-slate-800 text-slate-300 cursor-pointer">✕</button>
       </div>
-
       <div class="p-6 overflow-y-auto space-y-5 text-sm text-slate-700">
         <div class="space-y-2">
           <h4 class="font-bold text-slate-900 text-base flex items-center gap-2">
@@ -555,41 +632,44 @@
             Cara Jadikan Kod HTML sebagai Laman Utama (Home Page) Google Sites
           </h4>
           <ul class="list-disc list-inside space-y-1.5 text-xs sm:text-sm bg-slate-50 p-4 rounded-xl border border-slate-200">
-            <li>Di Google Sites, <b>jangan</b> guna <i>Insert &gt; Embed</i> biasa jika mahu paparan penuh (kerana ia akan ada margin kiri-kanan dan kotak skrol kecil).</li>
+            <li>Di Google Sites, <b>jangan</b> guna <i>Insert &gt; Embed</i> biasa jika mahu paparan penuh.</li>
             <li>Sebaliknya, pergi ke panel <b>Pages</b> &rarr; gerakkan tetikus ke butang <b>(+)</b> di bawah &rarr; pilih <b>Full page embed</b> (ikon <code class="bg-slate-200 px-1 rounded">&lt;&gt;</code>).</li>
-            <li>Pilih tab <b>Embed code</b>, tampal keseluruhan kod HTML yang dijana daripada aplikasi ini, klik <b>Next</b> &rarr; <b>Insert</b>.</li>
-            <li>Di panel <b>Pages</b>, klik 3 titik pada halaman tersebut dan pilih <b>Make homepage</b>.</li>
-            <li><b>Tip Kemas:</b> Di bahagian <i>Settings (ikon gear) &gt; Navigation</i>, anda boleh menyembunyikan bar navigasi atas Google Sites jika laman hanya mempunyai 1 halaman supaya portal kelihatan seperti laman web rasmi sebenar!</li>
+            <li>Pilih tab <b>Embed code</b>, tampal keseluruhan kod HTML, klik <b>Next</b> &rarr; <b>Insert</b>, kemudian jadikan ia <b>Make homepage</b>.</li>
           </ul>
         </div>
-
         <div class="space-y-2">
           <h4 class="font-bold text-slate-900 text-base flex items-center gap-2">
-            <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">2</span>
-            Cara Tetapkan Perkongsian Bahan &amp; Minit PDF di Google Drive
+            <span class="w-6 h-6 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold">2</span>
+            Mod Mesyuarat Dalam Talian, Hibrid &amp; Kod QR
+          </h4>
+          <ul class="list-disc list-inside space-y-1.5 text-xs sm:text-sm bg-sky-50 p-4 rounded-xl border border-sky-200 text-sky-950">
+            <li>Pilih <b>Fizikal</b>, <b>Dalam Talian</b> (Google Meet, Teams, Zoom, Webex) atau <b>Hibrid</b> di Tab 1.</li>
+            <li>Pilihan <b>Auto-Jana dari Pautan</b> menghasilkan Kod QR SVG secara langsung di dalam kod HTML (tidak bergantung pada pelayan luar dan tetap berfungsi di rangkaian jabatan).</li>
+            <li>Jika mahu menggunakan imej Kod QR tersuai (cth: berlogo agensi), tukar kepada <b>Muat Naik Imej / Drive</b>.</li>
+            <li>Ahli juga boleh mengklik Kod QR pada portal untuk membesarkannya di skrin projektor semasa mesyuarat hibrid.</li>
+          </ul>
+        </div>
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-900 text-base flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">3</span>
+            Tetapan Perkongsian Bahan &amp; Minit PDF di Google Drive
           </h4>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
             <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 space-y-1">
               <p class="font-bold text-emerald-900">Pilihan A: Akses Umum (Semua Ahli)</p>
-              <p class="text-emerald-800">Klik kanan fail/folder di Google Drive &rarr; <b>Share</b> &rarr; bawah <i>General access</i>, tukar kepada <b>Anyone with the link (Viewer)</b> &rarr; klik <b>Copy link</b>. Sesuai untuk mesyuarat rentas agensi.</p>
+              <p class="text-emerald-800">Klik kanan fail/folder &rarr; <b>Share</b> &rarr; <i>General access</i> &rarr; <b>Anyone with the link (Viewer)</b> &rarr; <b>Copy link</b>.</p>
             </div>
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 space-y-1">
               <p class="font-bold text-amber-900">Pilihan B: Terhad (Ahli Khusus Sahaja)</p>
-              <p class="text-amber-800">Kekalkan <b>Restricted</b> dan masukkan alamat e-mel Google ahli mesyuarat sahaja. Ahli perlu log masuk akaun Google mereka untuk melihat PDF &amp; memuat turun bahan.</p>
+              <p class="text-amber-800">Kekalkan <b>Restricted</b> dan masukkan e-mel Google ahli sahaja. Ahli perlu log masuk akaun Google untuk melihat PDF &amp; bahan.</p>
             </div>
           </div>
-          <p class="text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200">
-            <b>Automasi Pintar:</b> Anda tidak perlu menukar pautan Google Drive secara manual! Tampal sahaja pautan asal (<code class="bg-slate-200 px-1 rounded">.../file/d/ID/view?usp=sharing</code>):
-            <br/>• Untuk <b>Minit Mesyuarat (PDF)</b>: Penjana menukar secara automatik kepada <code class="bg-slate-200 px-1 rounded">/preview</code> supaya pemapar PDF muncul terus dalam laman.
-            <br/>• Untuk <b>Jata Negara / Logo / Banner</b>: Jika anda tampal pautan imej Google Drive (mesti <i>Anyone with the link</i>), penjana menukarnya automatik kepada pautan imej terus (<code class="bg-slate-200 px-1 rounded">lh3.googleusercontent.com/d/ID</code>).
-          </p>
         </div>
         <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 space-y-2.5">
           <h4 class="font-bold text-indigo-950 text-sm">Alat Uji Penukar Pautan Google Drive</h4>
           <input id="driveHelperInput" type="text" oninput="runDriveHelper(this.value)" placeholder="Tampal sebarang pautan Google Drive di sini untuk melihat format embed..." class="w-full rounded-xl border border-indigo-300 px-3 py-2 text-xs bg-white" />
           <div id="driveHelperResult" class="text-xs text-indigo-900 hidden space-y-1.5 bg-white p-3 rounded-xl border border-indigo-100"></div>
         </div>
-
       </div>
     </div>
   </div>
@@ -610,6 +690,7 @@
       </div>
     </div>
   </div>
+
   <div id="projectModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden">
       <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
@@ -633,101 +714,73 @@
       </div>
     </div>
   </div>
+
   <div id="toastContainer" class="fixed bottom-5 right-5 z-[60] flex flex-col gap-2 pointer-events-none"></div>
 
   <script>
-
     const THEMES = {
       kkmCorporate: {
         name: 'Korporat KKM',
         swatch: 'linear-gradient(135deg, #0a2e52 0%, #0e6ba8 68%, #0ea5a4 100%)',
         heroBg: 'linear-gradient(135deg, #07223d 0%, #0b4a78 58%, #0e7490 100%)',
-        primary: '#0b4a78',
-        primaryDark: '#07223d',
-        accent: '#e0b12e',
-        accentSoft: '#eff8ff',
-        accentText: '#0b4a78',
-        navBg: 'rgba(7, 34, 61, 0.94)',
-        footerBg: '#07223d',
-        heroText: '#ffffff',
-        heroMuted: 'rgba(255,255,255,0.86)',
-        isLightHero: false
+        primary: '#0b4a78', primaryDark: '#07223d', accent: '#e0b12e',
+        accentSoft: '#eff8ff', accentText: '#0b4a78',
+        navBg: 'rgba(7, 34, 61, 0.94)', footerBg: '#07223d',
+        heroText: '#ffffff', heroMuted: 'rgba(255,255,255,0.86)', isLightHero: false
       },
       royalNavy: {
         name: 'Diraja Putrajaya',
         swatch: 'linear-gradient(135deg, #0b1f3a 0%, #1e40af 70%, #d4af37 100%)',
         heroBg: 'linear-gradient(135deg, #09182e 0%, #143261 58%, #1d4ed8 100%)',
-        primary: '#143261',
-        primaryDark: '#09182e',
-        accent: '#d4af37',
-        accentSoft: '#fef9e7',
-        accentText: '#926c0c',
-        navBg: 'rgba(9, 24, 46, 0.92)',
-        footerBg: '#09182e',
-        heroText: '#ffffff',
-        heroMuted: 'rgba(255,255,255,0.82)',
-        isLightHero: false
+        primary: '#143261', primaryDark: '#09182e', accent: '#d4af37',
+        accentSoft: '#fef9e7', accentText: '#926c0c',
+        navBg: 'rgba(9, 24, 46, 0.92)', footerBg: '#09182e',
+        heroText: '#ffffff', heroMuted: 'rgba(255,255,255,0.82)', isLightHero: false
       },
       emeraldMadani: {
         name: 'Zamrud Madani',
         swatch: 'linear-gradient(135deg, #064e3b 0%, #0f766e 70%, #f59e0b 100%)',
         heroBg: 'linear-gradient(135deg, #052e26 0%, #065f46 55%, #0f766e 100%)',
-        primary: '#065f46',
-        primaryDark: '#052e26',
-        accent: '#eab308',
-        accentSoft: '#fefce8',
-        accentText: '#854d0e',
-        navBg: 'rgba(5, 46, 38, 0.92)',
-        footerBg: '#052e26',
-        heroText: '#ffffff',
-        heroMuted: 'rgba(255,255,255,0.84)',
-        isLightHero: false
+        primary: '#065f46', primaryDark: '#052e26', accent: '#eab308',
+        accentSoft: '#fefce8', accentText: '#854d0e',
+        navBg: 'rgba(5, 46, 38, 0.92)', footerBg: '#052e26',
+        heroText: '#ffffff', heroMuted: 'rgba(255,255,255,0.84)', isLightHero: false
       },
       digitalSlate: {
         name: 'Korporat Digital',
         swatch: 'linear-gradient(135deg, #0f172a 0%, #1e293b 65%, #0284c7 100%)',
         heroBg: 'linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #0369a1 100%)',
-        primary: '#0369a1',
-        primaryDark: '#0f172a',
-        accent: '#38bdf8',
-        accentSoft: '#f0f9ff',
-        accentText: '#0369a1',
-        navBg: 'rgba(15, 23, 42, 0.92)',
-        footerBg: '#0f172a',
-        heroText: '#ffffff',
-        heroMuted: 'rgba(255,255,255,0.82)',
-        isLightHero: false
+        primary: '#0369a1', primaryDark: '#0f172a', accent: '#38bdf8',
+        accentSoft: '#f0f9ff', accentText: '#0369a1',
+        navBg: 'rgba(15, 23, 42, 0.92)', footerBg: '#0f172a',
+        heroText: '#ffffff', heroMuted: 'rgba(255,255,255,0.82)', isLightHero: false
       },
       heritageCrimson: {
         name: 'Warisan Merah',
         swatch: 'linear-gradient(135deg, #450a0a 0%, #7f1d1d 70%, #d4af37 100%)',
         heroBg: 'linear-gradient(135deg, #3b0808 0%, #7f1d1d 60%, #991b1b 100%)',
-        primary: '#7f1d1d',
-        primaryDark: '#3b0808',
-        accent: '#eab308',
-        accentSoft: '#fefce8',
-        accentText: '#854d0e',
-        navBg: 'rgba(59, 8, 8, 0.92)',
-        footerBg: '#2b0606',
-        heroText: '#ffffff',
-        heroMuted: 'rgba(255,255,255,0.84)',
-        isLightHero: false
+        primary: '#7f1d1d', primaryDark: '#3b0808', accent: '#eab308',
+        accentSoft: '#fefce8', accentText: '#854d0e',
+        navBg: 'rgba(59, 8, 8, 0.92)', footerBg: '#2b0606',
+        heroText: '#ffffff', heroMuted: 'rgba(255,255,255,0.84)', isLightHero: false
       },
       cleanIvory: {
         name: 'Putih Eksekutif',
         swatch: 'linear-gradient(135deg, #ffffff 0%, #e2e8f0 70%, #1e3a8a 100%)',
         heroBg: 'linear-gradient(135deg, #f8fafc 0%, #eef2ff 60%, #e0e7ff 100%)',
-        primary: '#1e3a8a',
-        primaryDark: '#0f172a',
-        accent: '#c59b27',
-        accentSoft: '#eff6ff',
-        accentText: '#1e3a8a',
-        navBg: 'rgba(255, 255, 255, 0.94)',
-        footerBg: '#0f172a',
-        heroText: '#0f172a',
-        heroMuted: '#475569',
-        isLightHero: true
+        primary: '#1e3a8a', primaryDark: '#0f172a', accent: '#c59b27',
+        accentSoft: '#eff6ff', accentText: '#1e3a8a',
+        navBg: 'rgba(255, 255, 255, 0.94)', footerBg: '#0f172a',
+        heroText: '#0f172a', heroMuted: '#475569', isLightHero: true
       }
+    };
+
+    const PLATFORM_META = {
+      'Google Meet': { bg: '#ecfdf5', text: '#047857', border: '#a7f3d0', btn: '#059669' },
+      'Microsoft Teams': { bg: '#eef2ff', text: '#4338ca', border: '#c7d2fe', btn: '#4f46e5' },
+      'Zoom': { bg: '#eff6ff', text: '#1d4ed8', border: '#bfdbfe', btn: '#2563eb' },
+      'Cisco Webex': { bg: '#ecfeff', text: '#0e7490', border: '#a5f3fc', btn: '#0891b2' },
+      'Lain-lain': { bg: '#f1f5f9', text: '#334155', border: '#cbd5e1', btn: '#0b4a78' }
     };
 
     function getDefaultState() {
@@ -742,19 +795,32 @@
         coatHeight: 68,
         agencyLogo: '',
         footerLogo: '',
-
         agency: 'KEMENTERIAN KESIHATAN MALAYSIA',
         dept: 'Cawangan Pengurusan Risiko & Survelan Klinikal, Bahagian Perkembangan Perubatan',
         title: 'Mesyuarat Jawatankuasa Pengurusan Risiko & Survelan Klinikal Bil. 1/2026',
         subtitle: 'Memperkukuh Pengurusan Risiko Klinikal & Survelan Klinikal',
         dateText: '15 Disember 2026 (Selasa)',
         timeText: '9.00 Pagi – 1.00 Tengah Hari',
+        meetingMode: 'hybrid',
         venue: 'Bilik Mesyuarat Utama, CaPRiSK, Aras 4, Blok E1, Kompleks E, Putrajaya',
+        mapUrl: 'https://maps.google.com/?q=Kompleks+E+Putrajaya',
         chair: 'Dr. Azlihanis binti Abdul Hadi',
         countdownDate: '2026-12-15T09:00',
         showCountdown: true,
-
+        online: {
+          platform: 'Google Meet',
+          customPlatform: '',
+          url: 'https://meet.google.com/abc-defg-hij',
+          meetingId: 'abc-defg-hij',
+          passcode: '',
+          btnText: 'Sertai Google Meet',
+          note: 'Ahli dalam talian dipohon menyertai pautan 10 minit lebih awal dan memastikan mikrofon disenyapkan semasa pembentangan berlangsung.',
+          qrMode: 'auto',
+          qrImage: '',
+          qrCaption: 'Imbas kod QR untuk sertai mesyuarat dalam talian'
+        },
         sections: {
+          onlineAccess: true,
           invitation: true,
           rsvp: true,
           materials: true,
@@ -764,21 +830,18 @@
           minutes: true,
           contact: true
         },
-
         invitation: {
           ref: 'KKM.600-29/4/1 Jld. 3 (12)',
           date: '1 Disember 2026',
           desc: 'Dengan segala hormatnya dimaklumkan bahawa Mesyuarat Jawatankuasa Pengurusan Risiko & Survelan Klinikal Bil. 1/2026 akan diadakan seperti ketetapan di atas. Semua ahli dijemput hadir dan meneliti surat undangan rasmi yang dilampirkan.',
           url: 'https://drive.google.com/'
         },
-
         rsvp: {
           url: 'https://docs.google.com/forms/',
           deadline: '10 Disember 2026 (Khamis), jam 4.00 petang',
           btnText: 'Sahkan Kehadiran (RSVP)',
-          desc: 'Mohon kerjasama YBhg. Datuk/Dato’/Dr./Tuan/Puan untuk mengesahkan kehadiran atau menamakan wakil melalui pautan borang kehadiran di bawah bagi tujuan penyelarasan tempat dan jamuan.'
+          desc: 'Mohon kerjasama YBhg. Datuk/Dato’/Dr./Tuan/Puan untuk mengesahkan kehadiran (fizikal atau dalam talian) melalui pautan borang kehadiran di bawah bagi tujuan penyelarasan tempat dan akses talian.'
         },
-
         materials: {
           folderUrl: 'https://drive.google.com/',
           note: 'Semua bahan mesyuarat dimuat naik secara digital (Paperless) melalui Google Drive rasmi Urus Setia Cawangan Pengurusan Risiko & Survelan Klinikal.',
@@ -788,7 +851,6 @@
             { title: 'Lampiran A: Ringkasan Pelan Mitigasi Pengurusan Risiko Klinikal 2026', type: 'EXCEL', url: 'https://drive.google.com/' }
           ]
         },
-
         agenda: [
           { bil: '1.0', masa: '9.00 pagi', perkara: 'Ucapan Aluan Pengerusi Mesyuarat', pembentang: 'Dr. Azlihanis binti Abdul Hadi' },
           { bil: '2.0', masa: '9.15 pagi', perkara: 'Pengesahan Minit Mesyuarat Bil. 3/2025', pembentang: 'Urus Setia' },
@@ -797,34 +859,22 @@
           { bil: '5.0', masa: '11.15 pagi', perkara: 'Semakan Pelan Pengurusan Risiko Klinikal & Survelan Klinikal', pembentang: 'Cawangan PRSK' },
           { bil: '6.0', masa: '12.15 tgh', perkara: 'Hal-Hal Lain & Penangguhan Mesyuarat', pembentang: 'Pengerusi' }
         ],
-
         takwim: [
-          { bil: 'Bil. 1/2026', tarikh: '15 Disember 2026', tempat: 'Bilik Mesyuarat Utama, Blok E1, Kompleks E', status: 'Semasa' },
+          { bil: 'Bil. 1/2026', tarikh: '15 Disember 2026', tempat: 'Hibrid — Bilik Mesyuarat Utama Blok E1 & Google Meet', status: 'Semasa' },
           { bil: 'Bil. 2/2026', tarikh: '24 Mac 2026', tempat: 'Bilik Mesyuarat Utama, Blok E1, Kompleks E', status: 'Akan Datang' },
           { bil: 'Bil. 3/2026', tarikh: '23 Jun 2026', tempat: 'Secara Hibrid (Google Meet / Blok E1)', status: 'Dirancang' },
           { bil: 'Bil. 4/2026', tarikh: '20 Oktober 2026', tempat: 'Bilik Mesyuarat Utama, Blok E1, Kompleks E', status: 'Dirancang' }
         ],
-
         members: [
           { nama: 'Dr. Azlihanis binti Abdul Hadi', jawatan: 'Cawangan Pengurusan Risiko & Survelan Klinikal, Bahagian Perkembangan Perubatan', peranan: 'Pengerusi' },
           { nama: 'Dr. Ahmad Muzammil Bin Abu Bakar', jawatan: 'Ketua Penolong Pengarah Kanan, Unit Survelan Klinikal', peranan: 'Ahli / Pembentang' },
           { nama: 'Encik Fauzi bin Mansor', jawatan: 'Pembantu Tadbir, Cawangan Pengurusan Risiko & Survelan Klinikal', peranan: 'Urus Setia' },
           { nama: 'Puan Shahriza binti Shariffudin', jawatan: 'Pembantu Tadbir, Cawangan Pengurusan Risiko & Survelan Klinikal', peranan: 'Urus Setia' }
         ],
-
         minutes: [
-          {
-            title: 'Minit Mesyuarat Pengurusan Risiko & Survelan Klinikal Bil. 3/2025 (Untuk Pengesahan)',
-            date: 'Disahkan pada: 15 Disember 2026',
-            url: ''
-          },
-          {
-            title: 'Minit Mesyuarat Pengurusan Risiko & Survelan Klinikal Bil. 2/2025 (Arkib Rujukan)',
-            date: 'Tarikh Mesyuarat: 18 Julai 2025',
-            url: ''
-          }
+          { title: 'Minit Mesyuarat Pengurusan Risiko & Survelan Klinikal Bil. 3/2025 (Untuk Pengesahan)', date: 'Disahkan pada: 15 Disember 2026', url: '' },
+          { title: 'Minit Mesyuarat Pengurusan Risiko & Survelan Klinikal Bil. 2/2025 (Arkib Rujukan)', date: 'Tarikh Mesyuarat: 18 Julai 2025', url: '' }
         ],
-
         contact: {
           intro: 'Sebarang maklum balas, pertanyaan atau urusan berkaitan kehadiran dan bahan mesyuarat, sila hubungi pihak Urus Setia Cawangan Pengurusan Risiko & Survelan Klinikal di talian berikut:',
           feedbackUrl: '',
@@ -833,12 +883,11 @@
             { nama: 'Puan Shahriza binti Shariffudin', unit: 'Pembantu Tadbir (Urus Setia Mesyuarat)', tel: '03-8883 1001', email: 'shahriza@moh.gov.my' }
           ]
         },
-
         footer: {
           address: 'Bahagian Perkembangan Perubatan, Aras 4, Blok E1, Kompleks E, Pusat Pentadbiran Kerajaan Persekutuan, 62590 Putrajaya, Malaysia.',
           disclaimer: 'Penafian: Kerajaan Malaysia dan Kementerian Kesihatan Malaysia tidak bertanggungjawab terhadap sebarang kehilangan atau kerosakan yang dialami kerana menggunakan maklumat di dalam portal mesyuarat ini. Semua dokumen serta maklumat klinikal yang dipautkan adalah sulit dan terhad untuk kegunaan rasmi ahli mesyuarat sahaja.',
           copyright: '© 2026 Kementerian Kesihatan Malaysia (KKM). Hak Cipta Terpelihara.',
-          updated: '27 November 2026'
+          updated: '28 November 2026'
         }
       };
     }
@@ -848,13 +897,9 @@
 
     function esc(str) {
       if (str === null || str === undefined) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
+
     function extractDriveFileId(url) {
       if (!url) return null;
       const trimmed = url.trim();
@@ -870,57 +915,203 @@
       }
       return null;
     }
+
     function normalizeImageUrl(url) {
       if (!url) return '';
       if (url.startsWith('data:image/')) return url;
       const id = extractDriveFileId(url);
-      if (id) return `https://lh3.googleusercontent.com/d/${id}`;
-      return url.trim();
+      return id ? `https://lh3.googleusercontent.com/d/${id}` : url.trim();
     }
 
     function getPdfEmbedUrl(url) {
       if (!url) return '';
       const trimmed = url.trim();
       const id = extractDriveFileId(trimmed);
-      if (id) return `https://drive.google.com/file/d/${id}/preview`;
-      return trimmed;
+      return id ? `https://drive.google.com/file/d/${id}/preview` : trimmed;
+    }
+
+    function getPlatformName() {
+      if (!state.online) return 'Dalam Talian';
+      return state.online.platform === 'Lain-lain'
+        ? (state.online.customPlatform || 'Dalam Talian').trim()
+        : (state.online.platform || 'Google Meet');
+    }
+
+    function buildQrSvg(text) {
+      if (!text || !text.trim() || typeof qrcode === 'undefined') return '';
+      try {
+        const qr = qrcode(0, 'M');
+        qr.addData(text.trim());
+        qr.make();
+        const count = qr.getModuleCount();
+        const pad = 2;
+        const size = count + pad * 2;
+        let d = '';
+        for (let r = 0; r < count; r++) {
+          for (let c = 0; c < count; c++) {
+            if (qr.isDark(r, c)) d += `M${c + pad},${r + pad}h1v1h-1z`;
+          }
+        }
+        return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges" role="img" aria-label="Kod QR Sertai Mesyuarat"><rect width="100%" height="100%" fill="#ffffff"/><path d="${d}" fill="#0f172a"/></svg>`;
+      } catch (e) {
+        return '';
+      }
+    }
+
+    function getQrMarkup() {
+      const qrMode = state.online.qrMode || 'auto';
+      if (qrMode === 'none') return '';
+      if (qrMode === 'auto') {
+        const svg = buildQrSvg(state.online.url);
+        return svg || '';
+      }
+      const src = normalizeImageUrl(state.online.qrImage);
+      return src ? `<img src="${esc(src)}" alt="Kod QR Sertai Mesyuarat" class="qr-img" onerror="this.style.display='none'" />` : '';
+    }
+
+    function updateEditorQrPreview() {
+      const box = document.getElementById('editorQrPreview');
+      if (!box) return;
+      const qrMode = state.online.qrMode || 'auto';
+      if (qrMode === 'none') {
+        box.innerHTML = '';
+        return;
+      }
+      const markup = getQrMarkup();
+      if (markup) {
+        box.innerHTML = markup.replace('<svg ', '<svg class="w-full h-full" ').replace('class="qr-img"', 'class="w-full h-full object-contain"');
+      } else {
+        box.innerHTML = '<span class="text-[10px] text-slate-400 text-center leading-tight">Tiada QR</span>';
+      }
+    }
+
+    function setMeetingMode(mode) {
+      state.meetingMode = mode;
+      syncMeetingModeUi();
+      schedulePreview();
+    }
+
+    function syncMeetingModeUi() {
+      const mode = state.meetingMode || 'physical';
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        if (btn.dataset.mode === mode) {
+          btn.classList.add('mode-btn-active');
+          btn.classList.remove('bg-white', 'text-slate-700');
+        } else {
+          btn.classList.remove('mode-btn-active');
+          btn.classList.add('bg-white', 'text-slate-700');
+        }
+      });
+      document.getElementById('physicalVenueWrap').classList.toggle('hidden', mode === 'online');
+      document.getElementById('onlineMeetingWrap').classList.toggle('hidden', mode === 'physical');
+      syncOnlineSubUi();
+    }
+
+    function syncOnlineSubUi() {
+      const isCustom = state.online.platform === 'Lain-lain';
+      document.getElementById('customPlatformWrap').classList.toggle('hidden', !isCustom);
+      const qrMode = state.online.qrMode || 'auto';
+      document.getElementById('qrUploadWrap').classList.toggle('hidden', qrMode !== 'upload');
+      document.getElementById('qrCaptionWrap').classList.toggle('hidden', qrMode === 'none');
+      updateEditorQrPreview();
+    }
+
+    function onPlatformChange(val) {
+      const prevDefault = `Sertai ${state.online.platform}`;
+      state.online.platform = val;
+      if (!state.online.btnText || state.online.btnText === prevDefault || /^Sertai (Google Meet|Microsoft Teams|Zoom|Cisco Webex|Mesyuarat)/.test(state.online.btnText)) {
+        state.online.btnText = val === 'Lain-lain' ? 'Sertai Mesyuarat Talian' : `Sertai ${val}`;
+        document.getElementById('inpOnlineBtnText').value = state.online.btnText;
+      }
+      syncOnlineSubUi();
+      schedulePreview();
+    }
+
+    function onOnlineUrlChange(val) {
+      state.online.url = val.trim();
+      updateEditorQrPreview();
+      schedulePreview();
+    }
+
+    function onQrModeChange(val) {
+      state.online.qrMode = val;
+      syncOnlineSubUi();
+      schedulePreview();
+    }
+
+    function updateOnlineQrUrl(val) {
+      state.online.qrImage = val.trim();
+      updateEditorQrPreview();
+      schedulePreview();
+    }
+
+    function clearQrImage() {
+      state.online.qrImage = '';
+      document.getElementById('inpQrImageUrl').value = '';
+      updateEditorQrPreview();
+      schedulePreview();
+      showToast('Imej QR dipadamkan.', 'info');
+    }
+
+    function handleQrUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          try {
+            let w = img.naturalWidth, h = img.naturalHeight, maxDim = 360;
+            if (w > maxDim || h > maxDim) {
+              const ratio = Math.min(maxDim / w, maxDim / h);
+              w = Math.round(w * ratio);
+              h = Math.round(h * ratio);
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, 0, 0, w, h);
+            state.online.qrImage = canvas.toDataURL('image/png');
+            document.getElementById('inpQrImageUrl').value = '[Imej QR dimuat naik dari PC — sedia digunakan]';
+            updateEditorQrPreview();
+            schedulePreview();
+            showToast('Imej Kod QR berjaya dimuat naik!');
+          } catch (err) {
+            showToast('Gagal memproses imej QR.', 'error');
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
     }
 
     function runDriveHelper(val) {
       const box = document.getElementById('driveHelperResult');
-      if (!val.trim()) {
-        box.classList.add('hidden');
-        return;
-      }
+      if (!val.trim()) { box.classList.add('hidden'); return; }
       const id = extractDriveFileId(val);
       box.classList.remove('hidden');
       if (id) {
         box.innerHTML = `
           <div class="text-emerald-700 font-bold">✓ ID Fail Google Drive Dikesan: <code class="bg-emerald-50 px-1.5 py-0.5 rounded">${esc(id)}</code></div>
           <div><b>Pautan Pemapar PDF (Minit):</b><br/><code class="break-all text-[11px] bg-slate-100 px-1.5 py-0.5 rounded block mt-0.5">https://drive.google.com/file/d/${esc(id)}/preview</code></div>
-          <div><b>Pautan Terus Imej (Jata/Logo/Banner):</b><br/><code class="break-all text-[11px] bg-slate-100 px-1.5 py-0.5 rounded block mt-0.5">https://lh3.googleusercontent.com/d/${esc(id)}</code></div>
-          <div class="text-[11px] text-slate-500">Anda hanya perlu tampal pautan kongsi asal di mana-mana ruangan editor — sistem akan menukarnya secara automatik!</div>
-        `;
+          <div><b>Pautan Terus Imej (Jata/Logo/Banner/QR):</b><br/><code class="break-all text-[11px] bg-slate-100 px-1.5 py-0.5 rounded block mt-0.5">https://lh3.googleusercontent.com/d/${esc(id)}</code></div>`;
       } else {
-        box.innerHTML = `<div class="text-amber-700 font-medium">Pautan bukan format fail Google Drive (cth: pautan folder atau laman web biasa). Ia akan digunakan terus sebagaimana dimasukkan.</div>`;
+        box.innerHTML = `<div class="text-amber-700 font-medium">Pautan bukan format fail Google Drive. Ia akan digunakan terus sebagaimana dimasukkan.</div>`;
       }
     }
 
     function showToast(msg, type = 'success') {
       const container = document.getElementById('toastContainer');
-      const colors = {
-        success: 'bg-emerald-600 text-white',
-        info: 'bg-slate-900 text-white',
-        warn: 'bg-amber-500 text-slate-950',
-        error: 'bg-rose-600 text-white'
-      };
+      const colors = { success: 'bg-emerald-600 text-white', info: 'bg-slate-900 text-white', warn: 'bg-amber-500 text-slate-950', error: 'bg-rose-600 text-white' };
       const el = document.createElement('div');
       el.className = `${colors[type] || colors.info} px-4 py-2.5 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 transition-all duration-300 translate-y-2 opacity-0`;
       el.textContent = msg;
       container.appendChild(el);
-      requestAnimationFrame(() => {
-        el.classList.remove('translate-y-2', 'opacity-0');
-      });
+      requestAnimationFrame(() => el.classList.remove('translate-y-2', 'opacity-0'));
       setTimeout(() => {
         el.classList.add('opacity-0', 'translate-y-2');
         setTimeout(() => el.remove(), 300);
@@ -935,8 +1126,7 @@
         const img = new Image();
         img.onload = function() {
           try {
-            let w = img.naturalWidth;
-            let h = img.naturalHeight;
+            let w = img.naturalWidth, h = img.naturalHeight;
             if (w > maxDim || h > maxDim) {
               const ratio = Math.min(maxDim / w, maxDim / h);
               w = Math.round(w * ratio);
@@ -949,13 +1139,7 @@
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(img, 0, 0, w, h);
-
-            const isBanner = fieldName === 'customBanner';
-            const dataUrl = isBanner
-              ? canvas.toDataURL('image/jpeg', 0.82)
-              : canvas.toDataURL('image/png');
-
-            state[fieldName] = dataUrl;
+            state[fieldName] = fieldName === 'customBanner' ? canvas.toDataURL('image/jpeg', 0.82) : canvas.toDataURL('image/png');
             syncImageInputLabels();
             schedulePreview();
             showToast('Imej berjaya dimuat naik dengan nisbah aspek asal dikekalkan!');
@@ -969,66 +1153,38 @@
       event.target.value = '';
     }
 
-    function updateImageUrl(fieldName, val) {
-      state[fieldName] = val.trim();
-      schedulePreview();
-    }
-
-    function clearImage(fieldName) {
-      state[fieldName] = '';
-      syncImageInputLabels();
-      schedulePreview();
-      showToast('Imej dipadamkan.', 'info');
-    }
+    function updateImageUrl(fieldName, val) { state[fieldName] = val.trim(); schedulePreview(); }
+    function clearImage(fieldName) { state[fieldName] = ''; syncImageInputLabels(); schedulePreview(); showToast('Imej dipadamkan.', 'info'); }
 
     function syncImageInputLabels() {
-      const map = [
-        ['coatOfArms', 'inpCoatUrl'],
-        ['agencyLogo', 'inpAgencyLogoUrl'],
-        ['customBanner', 'inpBannerUrl'],
-        ['footerLogo', 'inpFooterLogoUrl']
-      ];
-      map.forEach(([key, id]) => {
+      [['coatOfArms', 'inpCoatUrl'], ['agencyLogo', 'inpAgencyLogoUrl'], ['customBanner', 'inpBannerUrl'], ['footerLogo', 'inpFooterLogoUrl']].forEach(([key, id]) => {
         const el = document.getElementById(id);
         if (!el) return;
-        el.value = state[key] && state[key].startsWith('data:')
-          ? '[Imej dimuat naik dari PC — sedia digunakan]'
-          : (state[key] || '');
+        el.value = state[key] && state[key].startsWith('data:') ? '[Imej dimuat naik dari PC — sedia digunakan]' : (state[key] || '');
       });
+      const qrInp = document.getElementById('inpQrImageUrl');
+      if (qrInp) {
+        qrInp.value = state.online.qrImage && state.online.qrImage.startsWith('data:') ? '[Imej QR dimuat naik dari PC — sedia digunakan]' : (state.online.qrImage || '');
+      }
     }
 
-    function updateField(key, val) {
-      state[key] = val;
-      schedulePreview();
-    }
-
-    function updateNested(section, key, val) {
-      state[section][key] = val;
-      schedulePreview();
-    }
+    function updateField(key, val) { state[key] = val; schedulePreview(); }
+    function updateNested(section, key, val) { state[section][key] = val; schedulePreview(); }
 
     function renderThemePresets() {
       const grid = document.getElementById('themePresetGrid');
       grid.innerHTML = Object.entries(THEMES).map(([id, t]) => {
         const active = state.theme === id;
-        return `
-          <button onclick="selectTheme('${id}')" class="p-2 rounded-xl border text-left transition cursor-pointer ${active ? 'border-blue-600 ring-2 ring-blue-500/30 bg-white shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}">
-            <div class="h-7 rounded-lg mb-1.5 border border-black/10" style="background:${t.swatch}"></div>
-            <div class="text-[11px] font-bold text-slate-700 truncate">${t.name}</div>
-          </button>
-        `;
+        return `<button onclick="selectTheme('${id}')" class="p-2 rounded-xl border text-left transition cursor-pointer ${active ? 'border-blue-600 ring-2 ring-blue-500/30 bg-white shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}">
+          <div class="h-7 rounded-lg mb-1.5 border border-black/10" style="background:${t.swatch}"></div>
+          <div class="text-[11px] font-bold text-slate-700 truncate">${t.name}</div>
+        </button>`;
       }).join('');
     }
-
-    function selectTheme(id) {
-      state.theme = id;
-      renderThemePresets();
-      schedulePreview();
-    }
+    function selectTheme(id) { state.theme = id; renderThemePresets(); schedulePreview(); }
 
     function renderMaterialsEditor() {
-      const box = document.getElementById('materialsListEditor');
-      box.innerHTML = state.materials.items.map((item, idx) => `
+      document.getElementById('materialsListEditor').innerHTML = state.materials.items.map((item, idx) => `
         <div class="bg-white rounded-xl p-2.5 border border-slate-200 space-y-2">
           <div class="flex items-center gap-2">
             <select onchange="state.materials.items[${idx}].type=this.value; schedulePreview();" class="rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold bg-slate-50">
@@ -1038,19 +1194,13 @@
             <button onclick="state.materials.items.splice(${idx},1); renderMaterialsEditor(); schedulePreview();" class="text-rose-500 hover:bg-rose-50 p-1 rounded-lg text-xs font-bold cursor-pointer" title="Padam">✕</button>
           </div>
           <input type="url" value="${esc(item.url)}" oninput="state.materials.items[${idx}].url=this.value; schedulePreview();" placeholder="Pautan Google Drive dokumen..." class="w-full rounded-lg border border-slate-300 px-2.5 py-1 text-xs text-slate-600" />
-        </div>
-      `).join('');
+        </div>`).join('');
     }
-    function addMaterialItem() {
-      state.materials.items.push({ title: 'Kertas Kerja Baharu', type: 'PDF', url: 'https://drive.google.com/' });
-      renderMaterialsEditor();
-      schedulePreview();
-    }
+    function addMaterialItem() { state.materials.items.push({ title: 'Kertas Kerja Baharu', type: 'PDF', url: 'https://drive.google.com/' }); renderMaterialsEditor(); schedulePreview(); }
 
     function renderAgendaEditor() {
       document.getElementById('agendaCount').textContent = state.agenda.length;
-      const box = document.getElementById('agendaListEditor');
-      box.innerHTML = state.agenda.map((row, idx) => `
+      document.getElementById('agendaListEditor').innerHTML = state.agenda.map((row, idx) => `
         <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-2">
           <div class="flex items-center gap-2">
             <input type="text" value="${esc(row.bil)}" oninput="state.agenda[${idx}].bil=this.value; schedulePreview();" placeholder="Bil." class="w-16 rounded-lg border border-slate-300 px-2 py-1 text-xs font-bold bg-white" />
@@ -1063,15 +1213,9 @@
             </div>
           </div>
           <input type="text" value="${esc(row.perkara)}" oninput="state.agenda[${idx}].perkara=this.value; schedulePreview();" placeholder="Perkara / Butiran Agenda..." class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white" />
-        </div>
-      `).join('');
+        </div>`).join('');
     }
-    function addAgendaRow() {
-      const nextNum = `${state.agenda.length + 1}.0`;
-      state.agenda.push({ bil: nextNum, masa: '', perkara: '', pembentang: '' });
-      renderAgendaEditor();
-      schedulePreview();
-    }
+    function addAgendaRow() { state.agenda.push({ bil: `${state.agenda.length + 1}.0`, masa: '', perkara: '', pembentang: '' }); renderAgendaEditor(); schedulePreview(); }
     function moveAgenda(idx, dir) {
       const target = idx + dir;
       if (target < 0 || target >= state.agenda.length) return;
@@ -1079,6 +1223,7 @@
       renderAgendaEditor();
       schedulePreview();
     }
+
     function downloadAgendaTemplate() {
       const rows = [
         ['Bil', 'Masa', 'Perkara / Agenda', 'Pembentang / Tindakan'],
@@ -1098,8 +1243,7 @@
           showToast('Templat Excel (.xlsx) berjaya dimuat turun!');
           return;
         }
-      } catch (e) { /* Sandaran CSV */ }
-
+      } catch (e) {}
       const csv = '\uFEFF' + rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\r\n');
       triggerDownload(new Blob([csv], { type: 'text/csv;charset=utf-8;' }), 'Templat_Agenda_Mesyuarat.csv');
       showToast('Templat CSV berjaya dimuat turun!');
@@ -1109,40 +1253,27 @@
       const file = event.target.files && event.target.files[0];
       if (!file) return;
       const isCsv = file.name.toLowerCase().endsWith('.csv');
-
       const applyRows = (matrix) => {
         const cleaned = [];
         matrix.forEach((r, i) => {
           if (!r || r.length === 0) return;
           const cells = r.map(c => (c === undefined || c === null) ? '' : String(c).trim());
           if (cells.every(c => !c)) return;
-          // Langkau baris pengepala jika dikesan
           if (i === 0 && /bil|masa|perkara|agenda/i.test(cells.join(' '))) return;
-          cleaned.push({
-            bil: cells[0] || `${cleaned.length + 1}.0`,
-            masa: cells[1] || '',
-            perkara: cells[2] || cells[0] || '',
-            pembentang: cells[3] || ''
-          });
+          cleaned.push({ bil: cells[0] || `${cleaned.length + 1}.0`, masa: cells[1] || '', perkara: cells[2] || cells[0] || '', pembentang: cells[3] || '' });
         });
-        if (cleaned.length === 0) {
-          showToast('Tiada baris agenda ditemui dalam fail tersebut.', 'warn');
-          return;
-        }
+        if (cleaned.length === 0) { showToast('Tiada baris agenda ditemui dalam fail tersebut.', 'warn'); return; }
         state.agenda = cleaned;
         renderAgendaEditor();
         schedulePreview();
         showToast(`Berjaya mengimport ${cleaned.length} baris agenda!`);
       };
-
       if (!isCsv && typeof XLSX !== 'undefined') {
         const reader = new FileReader();
         reader.onload = (e) => {
           try {
             const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-            const ws = wb.Sheets[wb.SheetNames[0]];
-            const matrix = XLSX.utils.sheet_to_json(ws, { header: 1 });
-            applyRows(matrix);
+            applyRows(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 }));
           } catch (err) {
             showToast('Gagal membaca fail Excel. Pastikan format .xlsx atau .csv sah.', 'error');
           }
@@ -1150,31 +1281,21 @@
         reader.readAsArrayBuffer(file);
       } else {
         const reader = new FileReader();
-        reader.onload = (e) => {
-          const text = e.target.result;
-          const matrix = parseCsvText(text);
-          applyRows(matrix);
-        };
+        reader.onload = (e) => applyRows(parseCsvText(e.target.result));
         reader.readAsText(file);
       }
       event.target.value = '';
     }
 
     function parseCsvText(text) {
-      const lines = text.replace(/^\uFEFF/, '').split(/\r?\n/);
-      return lines.map(line => {
+      return text.replace(/^\uFEFF/, '').split(/\r?\n/).map(line => {
         const res = [];
         let cur = '', inQ = false;
         for (let i = 0; i < line.length; i++) {
           const ch = line[i];
           if (ch === '"') {
-            if (inQ && line[i + 1] === '"') { cur += '"'; i++; }
-            else inQ = !inQ;
-          } else if (ch === ',' && !inQ) {
-            res.push(cur); cur = '';
-          } else {
-            cur += ch;
-          }
+            if (inQ && line[i + 1] === '"') { cur += '"'; i++; } else inQ = !inQ;
+          } else if (ch === ',' && !inQ) { res.push(cur); cur = ''; } else cur += ch;
         }
         res.push(cur);
         return res;
@@ -1183,23 +1304,14 @@
 
     function importPastedAgenda() {
       const raw = document.getElementById('pasteAgendaArea').value.trim();
-      if (!raw) {
-        showToast('Sila tampal data agenda terlebih dahulu.', 'warn');
-        return;
-      }
-      const lines = raw.split(/\r?\n/).filter(l => l.trim());
+      if (!raw) { showToast('Sila tampal data agenda terlebih dahulu.', 'warn'); return; }
       const imported = [];
-      lines.forEach((line, i) => {
-        const cols = line.includes('\t') ? line.split('\t') : line.split(',');
-        const c = cols.map(x => x.trim());
+      raw.split(/\r?\n/).filter(l => l.trim()).forEach((line, i) => {
+        const c = (line.includes('\t') ? line.split('\t') : line.split(',')).map(x => x.trim());
         if (i === 0 && /bil|masa|perkara|agenda/i.test(c.join(' '))) return;
-        if (c.length === 1) {
-          imported.push({ bil: `${imported.length + 1}.0`, masa: '', perkara: c[0], pembentang: '' });
-        } else if (c.length === 2) {
-          imported.push({ bil: `${imported.length + 1}.0`, masa: c[0], perkara: c[1], pembentang: '' });
-        } else {
-          imported.push({ bil: c[0] || `${imported.length + 1}.0`, masa: c[1] || '', perkara: c[2] || '', pembentang: c[3] || '' });
-        }
+        if (c.length === 1) imported.push({ bil: `${imported.length + 1}.0`, masa: '', perkara: c[0], pembentang: '' });
+        else if (c.length === 2) imported.push({ bil: `${imported.length + 1}.0`, masa: c[0], perkara: c[1], pembentang: '' });
+        else imported.push({ bil: c[0] || `${imported.length + 1}.0`, masa: c[1] || '', perkara: c[2] || '', pembentang: c[3] || '' });
       });
       if (imported.length > 0) {
         state.agenda = imported;
@@ -1210,9 +1322,9 @@
         showToast(`Berjaya mengimport ${imported.length} baris agenda!`);
       }
     }
+
     function renderTakwimEditor() {
-      const box = document.getElementById('takwimListEditor');
-      box.innerHTML = state.takwim.map((item, idx) => `
+      document.getElementById('takwimListEditor').innerHTML = state.takwim.map((item, idx) => `
         <div class="bg-white rounded-xl p-2.5 border border-slate-200 space-y-2">
           <div class="flex items-center gap-2">
             <input type="text" value="${esc(item.bil)}" oninput="state.takwim[${idx}].bil=this.value; schedulePreview();" placeholder="Bil. 1/2026" class="w-24 rounded-lg border border-slate-300 px-2 py-1 text-xs font-bold" />
@@ -1223,62 +1335,42 @@
             <button onclick="state.takwim.splice(${idx},1); renderTakwimEditor(); schedulePreview();" class="text-rose-500 p-1 text-xs font-bold cursor-pointer">✕</button>
           </div>
           <input type="text" value="${esc(item.tempat)}" oninput="state.takwim[${idx}].tempat=this.value; schedulePreview();" placeholder="Lokasi / Mod Mesyuarat" class="w-full rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-600" />
-        </div>
-      `).join('');
+        </div>`).join('');
     }
-    function addTakwimItem() {
-      state.takwim.push({ bil: `Bil. ${state.takwim.length + 1}/2026`, tarikh: 'Akan Dimaklumkan', tempat: 'Bilik Mesyuarat Utama', status: 'Dirancang' });
-      renderTakwimEditor();
-      schedulePreview();
-    }
+    function addTakwimItem() { state.takwim.push({ bil: `Bil. ${state.takwim.length + 1}/2026`, tarikh: 'Akan Dimaklumkan', tempat: 'Bilik Mesyuarat Utama', status: 'Dirancang' }); renderTakwimEditor(); schedulePreview(); }
 
     function renderMembersEditor() {
-      const box = document.getElementById('membersListEditor');
-      box.innerHTML = state.members.map((m, idx) => `
+      document.getElementById('membersListEditor').innerHTML = state.members.map((m, idx) => `
         <div class="bg-white rounded-xl p-2.5 border border-slate-200 space-y-2">
           <div class="flex items-center gap-2">
             <input type="text" value="${esc(m.nama)}" oninput="state.members[${idx}].nama=this.value; schedulePreview();" placeholder="Nama Penuh & Gelaran" class="flex-1 rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold" />
-            <input type="text" value="${esc(m.peranan)}" oninput="state.members[${idx}].peranan=this.value; schedulePreview();" placeholder="Peranan (cth: Ahli)" class="w-28 rounded-lg border border-slate-300 px-2 py-1 text-xs" />
+            <input type="text" value="${esc(m.peranan)}" oninput="state.members[${idx}].peranan=this.value; schedulePreview();" placeholder="Peranan" class="w-28 rounded-lg border border-slate-300 px-2 py-1 text-xs" />
             <button onclick="state.members.splice(${idx},1); renderMembersEditor(); schedulePreview();" class="text-rose-500 p-1 text-xs font-bold cursor-pointer">✕</button>
           </div>
           <input type="text" value="${esc(m.jawatan)}" oninput="state.members[${idx}].jawatan=this.value; schedulePreview();" placeholder="Jawatan / Bahagian / Agensi" class="w-full rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-600" />
-        </div>
-      `).join('');
+        </div>`).join('');
     }
-    function addMemberItem() {
-      state.members.push({ nama: 'Nama Ahli Baharu', jawatan: 'Jawatan / Bahagian', peranan: 'Ahli' });
-      renderMembersEditor();
-      schedulePreview();
-    }
-
+    function addMemberItem() { state.members.push({ nama: 'Nama Ahli Baharu', jawatan: 'Jawatan / Bahagian', peranan: 'Ahli' }); renderMembersEditor(); schedulePreview(); }
 
     function renderMinutesEditor() {
-      const box = document.getElementById('minutesListEditor');
-      box.innerHTML = state.minutes.map((m, idx) => `
+      document.getElementById('minutesListEditor').innerHTML = state.minutes.map((m, idx) => `
         <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-2">
           <div class="flex items-center justify-between gap-2">
             <span class="text-[11px] font-bold text-indigo-700 uppercase">Dokumen Minit #${idx + 1}</span>
             <button onclick="state.minutes.splice(${idx},1); renderMinutesEditor(); schedulePreview();" class="text-rose-600 hover:underline text-xs font-semibold cursor-pointer">Padam</button>
           </div>
-          <input type="text" value="${esc(m.title)}" oninput="state.minutes[${idx}].title=this.value; schedulePreview();" placeholder="Tajuk Minit (cth: Minit Mesyuarat Bil. 3/2025)" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs font-semibold bg-white" />
+          <input type="text" value="${esc(m.title)}" oninput="state.minutes[${idx}].title=this.value; schedulePreview();" placeholder="Tajuk Minit" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs font-semibold bg-white" />
           <input type="text" value="${esc(m.date)}" oninput="state.minutes[${idx}].date=this.value; schedulePreview();" placeholder="Catatan / Tarikh" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white" />
           <div>
             <label class="block text-[11px] font-semibold text-slate-600 mb-1">Pautan Google Drive PDF</label>
             <input type="url" value="${esc(m.url)}" oninput="state.minutes[${idx}].url=this.value; schedulePreview();" placeholder="https://drive.google.com/file/d/ID_FAIL/view?usp=sharing" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs bg-white" />
           </div>
-        </div>
-      `).join('');
+        </div>`).join('');
     }
-    function addMinuteItem() {
-      state.minutes.push({ title: 'Minit Mesyuarat Baharu', date: 'Tarikh Mesyuarat', url: '' });
-      renderMinutesEditor();
-      schedulePreview();
-    }
-
+    function addMinuteItem() { state.minutes.push({ title: 'Minit Mesyuarat Baharu', date: 'Tarikh Mesyuarat', url: '' }); renderMinutesEditor(); schedulePreview(); }
 
     function renderContactsEditor() {
-      const box = document.getElementById('contactsListEditor');
-      box.innerHTML = state.contact.people.map((p, idx) => `
+      document.getElementById('contactsListEditor').innerHTML = state.contact.people.map((p, idx) => `
         <div class="bg-white rounded-xl p-2.5 border border-slate-200 space-y-2">
           <div class="flex items-center gap-2">
             <input type="text" value="${esc(p.nama)}" oninput="state.contact.people[${idx}].nama=this.value; schedulePreview();" placeholder="Nama Pegawai" class="flex-1 rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold" />
@@ -1289,14 +1381,9 @@
             <input type="text" value="${esc(p.tel)}" oninput="state.contact.people[${idx}].tel=this.value; schedulePreview();" placeholder="No. Telefon" class="rounded-lg border border-slate-300 px-2 py-1 text-xs" />
             <input type="email" value="${esc(p.email)}" oninput="state.contact.people[${idx}].email=this.value; schedulePreview();" placeholder="E-mel Rasmi" class="rounded-lg border border-slate-300 px-2 py-1 text-xs" />
           </div>
-        </div>
-      `).join('');
+        </div>`).join('');
     }
-    function addContactPerson() {
-      state.contact.people.push({ nama: 'Nama Pegawai Urus Setia', unit: 'Urus Setia Cawangan PRSK', tel: '03-8883 1000', email: 'urussetia@moh.gov.my' });
-      renderContactsEditor();
-      schedulePreview();
-    }
+    function addContactPerson() { state.contact.people.push({ nama: 'Nama Pegawai Urus Setia', unit: 'Urus Setia Cawangan PRSK', tel: '03-8883 1000', email: 'urussetia@moh.gov.my' }); renderContactsEditor(); schedulePreview(); }
 
     function generatePortalHTML() {
       const t = THEMES[state.theme] || THEMES.kkmCorporate;
@@ -1311,8 +1398,22 @@
       const bannerSrc = normalizeImageUrl(state.customBanner);
       const footerLogoSrc = normalizeImageUrl(state.footerLogo);
 
+      const mode = state.meetingMode || 'physical';
+      const hasOnline = mode === 'online' || mode === 'hybrid';
+      const hasPhysical = mode === 'physical' || mode === 'hybrid';
+      const showOnlineSection = hasOnline && state.sections.onlineAccess;
+      const platformName = getPlatformName();
+      const pMeta = PLATFORM_META[state.online.platform] || PLATFORM_META['Lain-lain'];
+      const qrMarkup = hasOnline ? getQrMarkup() : '';
+
+      const modeLabel = mode === 'hybrid'
+        ? `Mod Hibrid • Fizikal & ${platformName}`
+        : mode === 'online'
+          ? `Dalam Talian • ${platformName}`
+          : 'Mod Fizikal (Bersemuka)';
 
       const navLinks = [];
+      if (showOnlineSection) navLinks.push({ id: 'akses', label: mode === 'hybrid' ? 'Akses Hibrid & QR' : 'Sertai & QR' });
       if (state.sections.invitation || state.sections.rsvp) navLinks.push({ id: 'tindakan', label: 'Undangan & RSVP' });
       if (state.sections.materials) navLinks.push({ id: 'bahan', label: 'Bahan Mesyuarat' });
       if (state.sections.agenda) navLinks.push({ id: 'agenda', label: 'Agenda' });
@@ -1320,7 +1421,6 @@
       if (state.sections.members) navLinks.push({ id: 'ahli', label: 'Ahli' });
       if (state.sections.minutes) navLinks.push({ id: 'minit', label: 'Minit (PDF)' });
       if (state.sections.contact) navLinks.push({ id: 'hubungi', label: 'Hubungi Kami' });
-
 
       const patternCss = state.showPattern ? `
         .hero-pattern {
@@ -1335,7 +1435,6 @@
         ? `background: linear-gradient(rgba(9, 18, 36, ${(state.bannerOverlay / 100).toFixed(2)}), rgba(9, 18, 36, ${Math.min(0.95, (state.bannerOverlay / 100) + 0.1).toFixed(2)})), url('${esc(bannerSrc)}') center/cover no-repeat;`
         : `background: ${t.heroBg};`;
 
-
       const defaultEmblemSvg = `
         <div class="emblem-placeholder" title="Muat naik Jata Negara rasmi di Penjana">
           <svg viewBox="0 0 48 48" width="38" height="38" fill="none" stroke="currentColor" stroke-width="2">
@@ -1344,26 +1443,115 @@
           </svg>
         </div>`;
 
-
       const coatHeight = Number(state.coatHeight) || 68;
       const crestsHtml = `
         <div class="crest-row">
           ${coatSrc
-            ? `<div class="crest-wrap ${state.coatBadge ? 'crest-badge' : ''}">
-                 <img src="${esc(coatSrc)}" alt="Jata Negara Malaysia" class="crest-img" style="height:${coatHeight}px;width:auto;" onerror="this.style.display='none'" />
-               </div>`
+            ? `<div class="crest-wrap ${state.coatBadge ? 'crest-badge' : ''}"><img src="${esc(coatSrc)}" alt="Jata Negara Malaysia" class="crest-img" style="height:${coatHeight}px;width:auto;" onerror="this.style.display='none'" /></div>`
             : defaultEmblemSvg}
           ${agencyLogoSrc
-            ? `<div class="crest-divider"></div>
-               <div class="crest-wrap ${state.coatBadge ? 'crest-badge' : ''}">
-                 <img src="${esc(agencyLogoSrc)}" alt="Logo Agensi" class="crest-img" style="height:${Math.round(coatHeight * 0.88)}px;width:auto;" onerror="this.style.display='none'" />
-               </div>`
+            ? `<div class="crest-divider"></div><div class="crest-wrap ${state.coatBadge ? 'crest-badge' : ''}"><img src="${esc(agencyLogoSrc)}" alt="Logo Agensi" class="crest-img" style="height:${Math.round(coatHeight * 0.88)}px;width:auto;" onerror="this.style.display='none'" /></div>`
             : ''}
+          <span class="mode-badge">
+            <span class="mode-dot ${hasOnline ? 'mode-dot-live' : ''}"></span>
+            ${esc(modeLabel)}
+          </span>
         </div>`;
 
+      const onlineSectionHtml = showOnlineSection ? `
+      <section id="akses" class="sec sec-access">
+        <div class="container">
+          <div class="sec-head">
+            <span class="sec-kicker">${mode === 'hybrid' ? 'Kehadiran Fizikal & Dalam Talian' : 'Capaian Mesyuarat Dalam Talian'}</span>
+            <h2 class="sec-title">${mode === 'hybrid' ? 'Akses Mesyuarat Hibrid &amp; Kod QR' : 'Sertai Mesyuarat Dalam Talian &amp; Kod QR'}</h2>
+          </div>
+          <div class="access-layout ${qrMarkup ? 'has-qr' : ''}">
+            <div class="access-main ${mode === 'hybrid' ? 'access-split' : ''}">
+              ${mode === 'hybrid' ? `
+              <div class="card card-physical">
+                <div class="card-icon-row">
+                  <div class="icon-box">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div>
+                    <span class="platform-chip chip-physical">Kehadiran Fizikal (Bersemuka)</span>
+                    <h3 class="card-title" style="margin-top:4px;">Lokasi Bilik Mesyuarat</h3>
+                  </div>
+                </div>
+                <p class="venue-text">${esc(state.venue || 'Akan dimaklumkan oleh Urus Setia')}</p>
+                ${state.mapUrl ? `
+                <div class="card-actions" style="margin-top:auto;">
+                  <a href="${esc(state.mapUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-main">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                    Buka Peta Lokasi
+                  </a>
+                </div>` : ''}
+              </div>` : ''}
+
+              <div class="card card-online" style="border-top-color:${pMeta.btn};">
+                <div class="card-icon-row">
+                  <div class="icon-box" style="background:${pMeta.btn};">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                  </div>
+                  <div>
+                    <span class="platform-chip" style="background:${pMeta.bg};color:${pMeta.text};border-color:${pMeta.border};">Kehadiran Dalam Talian</span>
+                    <h3 class="card-title" style="margin-top:4px;">${esc(platformName)}</h3>
+                  </div>
+                </div>
+
+                ${(state.online.meetingId || state.online.passcode) ? `
+                <div class="cred-grid">
+                  ${state.online.meetingId ? `
+                  <div class="cred-box">
+                    <div>
+                      <div class="cred-lbl">ID / Kod Mesyuarat</div>
+                      <div class="cred-val">${esc(state.online.meetingId)}</div>
+                    </div>
+                    <button type="button" class="copy-chip" onclick="copyPortalText(${esc(JSON.stringify(state.online.meetingId))}, this)">Salin</button>
+                  </div>` : ''}
+                  ${state.online.passcode ? `
+                  <div class="cred-box">
+                    <div>
+                      <div class="cred-lbl">Kata Laluan / PIN</div>
+                      <div class="cred-val">${esc(state.online.passcode)}</div>
+                    </div>
+                    <button type="button" class="copy-chip" onclick="copyPortalText(${esc(JSON.stringify(state.online.passcode))}, this)">Salin</button>
+                  </div>` : ''}
+                </div>` : ''}
+
+                ${state.online.url ? `
+                <div class="link-preview-row">
+                  <span class="link-preview-text">${esc(state.online.url)}</span>
+                  <button type="button" class="copy-chip" onclick="copyPortalText(${esc(JSON.stringify(state.online.url))}, this)">Salin Pautan</button>
+                </div>` : ''}
+
+                ${state.online.note ? `<p class="card-desc" style="margin-bottom:18px;">${esc(state.online.note)}</p>` : ''}
+
+                <div class="card-actions" style="margin-top:auto;">
+                  ${state.online.url ? `
+                  <a href="${esc(state.online.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-online" style="background:${pMeta.btn};">
+                    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                    ${esc(state.online.btnText || `Sertai ${platformName}`)}
+                  </a>` : '<span class="muted-hint">Pautan mesyuarat akan dikemas kini oleh Urus Setia.</span>'}
+                </div>
+              </div>
+            </div>
+
+            ${qrMarkup ? `
+            <div class="card qr-card">
+              <div class="qr-head">Kod QR Sertai Talian</div>
+              <button type="button" class="qr-frame" onclick="openQrZoom()" title="Klik untuk besarkan Kod QR">
+                ${qrMarkup}
+              </button>
+              <div class="qr-caption">${esc(state.online.qrCaption || `Imbas untuk sertai melalui ${platformName}`)}</div>
+              <button type="button" class="btn-outline-sm" onclick="openQrZoom()">Besarkan Kod QR &#x26F6;</button>
+            </div>` : ''}
+          </div>
+        </div>
+      </section>` : '';
 
       const actionSectionHtml = (state.sections.invitation || state.sections.rsvp) ? `
-      <section id="tindakan" class="sec">
+      <section id="tindakan" class="sec ${showOnlineSection ? 'sec-alt' : ''}">
         <div class="container">
           <div class="sec-head">
             <span class="sec-kicker">Tindakan Ahli Mesyuarat</span>
@@ -1392,7 +1580,6 @@
                 </a>
               </div>
             </div>` : ''}
-
             ${state.sections.rsvp ? `
             <div class="card card-rsvp">
               <div class="card-icon-row">
@@ -1416,9 +1603,8 @@
         </div>
       </section>` : '';
 
-
       const materialsHtml = state.sections.materials ? `
-      <section id="bahan" class="sec sec-alt">
+      <section id="bahan" class="sec ${showOnlineSection ? '' : 'sec-alt'}">
         <div class="container">
           <div class="sec-head-flex">
             <div>
@@ -1432,7 +1618,6 @@
               Buka Folder Google Drive Utama
             </a>` : ''}
           </div>
-
           ${state.materials.items.length > 0 ? `
           <div class="doc-grid">
             ${state.materials.items.map(item => `
@@ -1447,9 +1632,8 @@
         </div>
       </section>` : '';
 
-
       const agendaHtml = state.sections.agenda ? `
-      <section id="agenda" class="sec">
+      <section id="agenda" class="sec ${showOnlineSection ? 'sec-alt' : ''}">
         <div class="container">
           <div class="sec-head">
             <span class="sec-kicker">Atur Cara Rasmi</span>
@@ -1479,16 +1663,9 @@
         </div>
       </section>` : '';
 
-
-      const statusClassMap = {
-        'Semasa': 'st-current',
-        'Akan Datang': 'st-upcoming',
-        'Dirancang': 'st-planned',
-        'Selesai': 'st-done',
-        'Ditangguh': 'st-postponed'
-      };
+      const statusClassMap = { 'Semasa': 'st-current', 'Akan Datang': 'st-upcoming', 'Dirancang': 'st-planned', 'Selesai': 'st-done', 'Ditangguh': 'st-postponed' };
       const takwimHtml = state.sections.takwim ? `
-      <section id="takwim" class="sec sec-alt">
+      <section id="takwim" class="sec ${showOnlineSection ? '' : 'sec-alt'}">
         <div class="container">
           <div class="sec-head">
             <span class="sec-kicker">Jadual Siri Mesyuarat</span>
@@ -1509,7 +1686,7 @@
       </section>` : '';
 
       const membersHtml = state.sections.members ? `
-      <section id="ahli" class="sec">
+      <section id="ahli" class="sec ${showOnlineSection ? 'sec-alt' : ''}">
         <div class="container">
           <div class="sec-head">
             <span class="sec-kicker">Keahlian Jawatankuasa</span>
@@ -1532,23 +1709,16 @@
         </div>
       </section>` : '';
 
-
-      const minutesListData = state.minutes.map(m => ({
-        title: m.title,
-        date: m.date,
-        rawUrl: m.url,
-        embedUrl: getPdfEmbedUrl(m.url)
-      }));
+      const minutesListData = state.minutes.map(m => ({ title: m.title, date: m.date, rawUrl: m.url, embedUrl: getPdfEmbedUrl(m.url) }));
       const firstMinute = minutesListData[0] || { title: 'Minit Mesyuarat', date: '', rawUrl: '', embedUrl: '' };
 
       const minutesHtml = state.sections.minutes ? `
-      <section id="minit" class="sec sec-alt">
+      <section id="minit" class="sec ${showOnlineSection ? '' : 'sec-alt'}">
         <div class="container">
           <div class="sec-head">
             <span class="sec-kicker">Rekod Rasmi &amp; Pengesahan</span>
             <h2 class="sec-title">Minit Mesyuarat (Pemapar PDF)</h2>
           </div>
-
           ${minutesListData.length > 1 ? `
           <div class="minute-tabs" role="tablist">
             ${minutesListData.map((m, i) => `
@@ -1557,24 +1727,22 @@
               <span>${esc(m.title)}</span>
             </button>`).join('')}
           </div>` : ''}
-
           <div class="pdf-shell">
             <div class="pdf-bar">
               <div>
                 <div id="pdfTitle" class="pdf-title">${esc(firstMinute.title)}</div>
                 <div id="pdfDate" class="pdf-date">${esc(firstMinute.date)}</div>
               </div>
-              <a id="pdfOpenBtn" href="${esc(firstMinute.rawUrl || '#')}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-sm" style="${firstMinute.rawUrl ? '' : 'display:none;'}">
+              <a id="pdfOpenBtn" href="${esc(firstMinute.rawUrl || '#')}" target="_blank" rel="noopener noreferrer" class="btn-outline-sm" style="${firstMinute.rawUrl ? '' : 'display:none;'}">
                 Buka Skrin Penuh / Muat Turun &nearr;
               </a>
             </div>
-
             <div class="pdf-stage">
               <iframe id="pdfFrame" title="Pemapar PDF Minit Mesyuarat" src="${esc(firstMinute.embedUrl)}" style="${firstMinute.embedUrl ? '' : 'display:none;'}" allow="autoplay"></iframe>
               <div id="pdfEmpty" class="pdf-empty" style="${firstMinute.embedUrl ? 'display:none;' : ''}">
                 <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
                 <h4>Paparan Langsung PDF Minit Mesyuarat</h4>
-                <p>Masukkan pautan fail PDF Google Drive di tab <b>5. Minit (PDF)</b> pada Penjana untuk memaparkan dokumen terus di sini. Jika dokumen ditetapkan sebagai <i>Terhad</i>, ahli perlu log masuk ke akaun Google mereka.</p>
+                <p>Masukkan pautan fail PDF Google Drive di tab <b>5. Minit (PDF)</b> pada Penjana untuk memaparkan dokumen terus di sini.</p>
               </div>
             </div>
           </div>
@@ -1582,7 +1750,7 @@
       </section>` : '';
 
       const contactHtml = state.sections.contact ? `
-      <section id="hubungi" class="sec">
+      <section id="hubungi" class="sec ${showOnlineSection ? 'sec-alt' : ''}">
         <div class="container">
           <div class="contact-banner">
             <div class="sec-head" style="margin-bottom:22px;">
@@ -1590,34 +1758,36 @@
               <h2 class="sec-title">Sebarang Maklum Balas Berkaitan, Sila Hubungi</h2>
               <p class="sec-sub">${esc(state.contact.intro)}</p>
             </div>
-
             <div class="contact-grid">
               ${state.contact.people.map(p => `
               <div class="contact-card">
                 <h3 class="contact-name">${esc(p.nama)}</h3>
                 <p class="contact-unit">${esc(p.unit)}</p>
                 <div class="contact-links">
-                  ${p.tel ? `<a href="tel:${esc(p.tel.replace(/[^+\d]/g, ''))}" class="c-link">
-                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                    ${esc(p.tel)}
-                  </a>` : ''}
-                  ${p.email ? `<a href="mailto:${esc(p.email)}" class="c-link">
-                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    ${esc(p.email)}
-                  </a>` : ''}
+                  ${p.tel ? `<a href="tel:${esc(p.tel.replace(/[^+\d]/g, ''))}" class="c-link"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>${esc(p.tel)}</a>` : ''}
+                  ${p.email ? `<a href="mailto:${esc(p.email)}" class="c-link"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>${esc(p.email)}</a>` : ''}
                 </div>
               </div>`).join('')}
             </div>
-
-            ${state.contact.feedbackUrl ? `
-            <div style="margin-top:22px;">
-              <a href="${esc(state.contact.feedbackUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-                Hantar Maklum Balas Dalam Talian &rarr;
-              </a>
-            </div>` : ''}
+            ${state.contact.feedbackUrl ? `<div style="margin-top:22px;"><a href="${esc(state.contact.feedbackUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Hantar Maklum Balas Dalam Talian &rarr;</a></div>` : ''}
           </div>
         </div>
       </section>` : '';
+
+      const qrModalHtml = qrMarkup ? `
+      <div id="qrZoomModal" class="qr-modal" onclick="if(event.target===this) closeQrZoom()">
+        <div class="qr-modal-box">
+          <div class="qr-modal-top">
+            <div>
+              <div class="qr-modal-title">${esc(platformName)}</div>
+              <div class="qr-modal-sub">${esc(state.online.qrCaption || 'Imbas kod QR untuk sertai mesyuarat')}</div>
+            </div>
+            <button type="button" class="qr-close" onclick="closeQrZoom()">&times;</button>
+          </div>
+          <div class="qr-modal-stage">${qrMarkup}</div>
+          ${state.online.url ? `<div class="qr-modal-url">${esc(state.online.url)}</div>` : ''}
+        </div>
+      </div>` : '';
 
       const safeMinutesJson = JSON.stringify(minutesListData).replace(/</g, '\\u003c');
 
@@ -1649,183 +1819,125 @@
     html { scroll-behavior: smooth; }
     body {
       font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      -webkit-font-smoothing: antialiased; overflow-x: hidden;
     }
     a { color: inherit; text-decoration: none; }
     .container { width: 100%; max-width: ${lw.maxW}; margin: 0 auto; padding: ${lw.pad}; }
-
-    /* Navigasi Melekit (Sticky Nav) */
     .topbar {
       position: sticky; top: 0; z-index: 100;
-      background: ${t.navBg};
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: ${t.navBg}; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid ${t.isLightHero ? 'rgba(15,23,42,0.08)' : 'rgba(255,255,255,0.12)'};
       color: ${t.isLightHero ? '#0f172a' : '#ffffff'};
     }
-    .topbar-inner {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 16px; min-height: 60px; padding: 8px 0;
-    }
-    .brand-mini {
-      font-weight: 800; font-size: 13px; letter-spacing: 0.03em;
-      text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 420px;
-      display: flex; align-items: center; gap: 10px;
-    }
+    .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; padding: 8px 0; }
+    .brand-mini { font-weight: 800; font-size: 13px; letter-spacing: 0.03em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 420px; display: flex; align-items: center; gap: 10px; }
     .brand-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
     .nav-links { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .nav-btn {
-      background: transparent; border: 0; color: inherit; font-family: inherit;
-      font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 10px;
-      cursor: pointer; opacity: 0.85; transition: all 0.2s ease;
-    }
+    .nav-btn { background: transparent; border: 0; color: inherit; font-family: inherit; font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 10px; cursor: pointer; opacity: 0.85; transition: all 0.2s ease; }
     .nav-btn:hover { opacity: 1; background: ${t.isLightHero ? 'rgba(30,58,138,0.08)' : 'rgba(255,255,255,0.14)'}; }
-    .menu-toggle {
-      display: none; background: transparent; border: 1px solid currentColor;
-      color: inherit; border-radius: 10px; padding: 6px 10px; font-size: 13px; font-weight: 600; cursor: pointer;
-    }
-
-    /* Banner Hero */
-    .hero {
-      position: relative;
-      ${heroBgStyle}
-      color: ${heroTextCol};
-      padding: 56px 0 64px;
-      border-bottom: 4px solid var(--accent);
-      overflow: hidden;
-    }
+    .menu-toggle { display: none; background: transparent; border: 1px solid currentColor; color: inherit; border-radius: 10px; padding: 6px 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .hero { position: relative; ${heroBgStyle} color: ${heroTextCol}; padding: 52px 0 60px; border-bottom: 4px solid var(--accent); overflow: hidden; }
     ${patternCss}
     .hero-inner { position: relative; z-index: 2; }
-    .crest-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+    .crest-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; }
     .crest-wrap { display: inline-flex; align-items: center; justify-content: center; }
-    .crest-badge {
-      background: rgba(255, 255, 255, 0.96);
-      padding: 8px 14px;
-      border-radius: 14px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
-    }
-    .crest-img {
-      display: block;
-      object-fit: contain;
-      max-width: 100%;
-    }
+    .crest-badge { background: rgba(255, 255, 255, 0.96); padding: 8px 14px; border-radius: 14px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18); }
+    .crest-img { display: block; object-fit: contain; max-width: 100%; }
     .crest-divider { width: 1px; height: 42px; background: currentColor; opacity: 0.28; }
-    .emblem-placeholder {
-      width: 56px; height: 56px; border-radius: 14px;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
-      display: flex; align-items: center; justify-content: center; color: var(--accent);
-    }
-    .agency-eyebrow {
-      font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-      color: ${useLightTextHero ? '#fde68a' : 'var(--primary)'}; margin-bottom: 4px;
-    }
-    .dept-label { font-size: 14px; color: ${heroMutedCol}; margin-bottom: 14px; font-weight: 500; }
-    .hero-title {
-      font-size: clamp(26px, 4vw, 42px); font-weight: 800; line-height: 1.18;
-      letter-spacing: -0.02em; max-width: 1180px; margin-bottom: 14px;
-    }
-    .hero-sub { font-size: clamp(15px, 1.8vw, 18px); color: ${heroMutedCol}; max-width: 960px; margin-bottom: 28px; }
-
-    /* Kad Maklumat Ringkas Hero */
-    .info-strip {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
-      gap: 12px; margin-bottom: 28px;
-    }
-    .info-pill {
-      background: ${useLightTextHero ? 'rgba(255,255,255,0.11)' : '#ffffff'};
-      border: 1px solid ${useLightTextHero ? 'rgba(255,255,255,0.18)' : 'var(--border)'};
+    .emblem-placeholder { width: 56px; height: 56px; border-radius: 14px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; color: var(--accent); }
+    .mode-badge {
+      display: inline-flex; align-items: center; gap: 8px; margin-left: auto;
+      font-size: 12px; font-weight: 700; padding: 7px 14px; border-radius: 999px;
+      background: ${useLightTextHero ? 'rgba(255,255,255,0.14)' : '#ffffff'};
+      border: 1px solid ${useLightTextHero ? 'rgba(255,255,255,0.26)' : 'var(--border)'};
       backdrop-filter: blur(8px);
-      border-radius: 14px; padding: 13px 16px;
     }
+    .mode-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+    .mode-dot-live { background: #34d399; box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.25); }
+    .agency-eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: ${useLightTextHero ? '#fde68a' : 'var(--primary)'}; margin-bottom: 4px; }
+    .dept-label { font-size: 14px; color: ${heroMutedCol}; margin-bottom: 14px; font-weight: 500; }
+    .hero-title { font-size: clamp(26px, 4vw, 42px); font-weight: 800; line-height: 1.18; letter-spacing: -0.02em; max-width: 1180px; margin-bottom: 14px; }
+    .hero-sub { font-size: clamp(15px, 1.8vw, 18px); color: ${heroMutedCol}; max-width: 960px; margin-bottom: 26px; }
+    .info-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 12px; margin-bottom: 26px; }
+    .info-pill { background: ${useLightTextHero ? 'rgba(255,255,255,0.11)' : '#ffffff'}; border: 1px solid ${useLightTextHero ? 'rgba(255,255,255,0.18)' : 'var(--border)'}; backdrop-filter: blur(8px); border-radius: 14px; padding: 13px 16px; }
     .info-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; opacity: 0.75; font-weight: 700; margin-bottom: 3px; }
     .info-val { font-size: 14px; font-weight: 700; line-height: 1.35; }
-
-    /* Countdown & CTA Hero */
+    .info-mini-link { display: inline-block; margin-top: 5px; font-size: 12px; font-weight: 700; text-decoration: underline; color: ${useLightTextHero ? '#fde68a' : 'var(--primary)'}; }
     .hero-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; }
     .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
-    .countdown-box {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: ${useLightTextHero ? 'rgba(0,0,0,0.28)' : '#ffffff'};
-      border: 1px solid ${useLightTextHero ? 'rgba(255,255,255,0.2)' : 'var(--border)'};
-      padding: 10px 16px; border-radius: 14px;
-    }
+    .countdown-box { display: inline-flex; align-items: center; gap: 10px; background: ${useLightTextHero ? 'rgba(0,0,0,0.28)' : '#ffffff'}; border: 1px solid ${useLightTextHero ? 'rgba(255,255,255,0.2)' : 'var(--border)'}; padding: 10px 16px; border-radius: 14px; }
     .cd-unit { text-align: center; min-width: 46px; }
     .cd-num { font-size: 20px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; color: ${useLightTextHero ? '#fde68a' : 'var(--primary)'}; }
     .cd-txt { font-size: 10px; text-transform: uppercase; opacity: 0.78; font-weight: 600; }
     .cd-sep { font-weight: 800; opacity: 0.4; }
-
-    /* Butang */
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 700;
-      border: 0; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-    }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 700; border: 0; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease; }
     .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(15,23,42,0.16); }
     .btn-primary { background: var(--primary); color: #ffffff; }
+    .btn-online { color: #ffffff; }
     .btn-gold { background: var(--accent); color: #111827; }
-    .btn-hero-ghost {
-      background: ${useLightTextHero ? 'rgba(255,255,255,0.14)' : '#ffffff'};
-      color: ${heroTextCol};
-      border: 1px solid ${useLightTextHero ? 'rgba(255,255,255,0.32)' : 'var(--border)'};
-    }
-    .btn-outline-sm {
-      display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px;
-      border: 1px solid var(--border); background: #ffffff; color: var(--primary); font-size: 12px; font-weight: 700;
-    }
+    .btn-outline-main { background: var(--bg); color: var(--primary); border: 1px solid var(--border); }
+    .btn-hero-ghost { background: ${useLightTextHero ? 'rgba(255,255,255,0.14)' : '#ffffff'}; color: ${heroTextCol}; border: 1px solid ${useLightTextHero ? 'rgba(255,255,255,0.32)' : 'var(--border)'}; }
+    .btn-outline-sm { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px; border: 1px solid var(--border); background: #ffffff; color: var(--primary); font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
     .btn-outline-sm:hover { background: var(--bg); }
     .shrink-btn { flex-shrink: 0; }
-
-    /* Seksyen Umum */
-    .sec { padding: 62px 0; scroll-margin-top: 66px; }
+    .sec { padding: 58px 0; scroll-margin-top: 66px; }
     .sec-alt { background: #ffffff; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .sec-head { margin-bottom: 28px; }
-    .sec-head-flex { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 28px; }
-    .sec-kicker {
-      display: inline-block; font-size: 12px; font-weight: 800; text-transform: uppercase;
-      letter-spacing: 0.08em; color: var(--primary); background: var(--accent-soft);
-      padding: 4px 12px; border-radius: 999px; margin-bottom: 8px;
-    }
+    .sec-head { margin-bottom: 26px; }
+    .sec-head-flex { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 26px; }
+    .sec-kicker { display: inline-block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); background: var(--accent-soft); padding: 4px 12px; border-radius: 999px; margin-bottom: 8px; }
     .sec-title { font-size: clamp(22px, 2.8vw, 30px); font-weight: 800; letter-spacing: -0.02em; color: var(--text); }
     .sec-sub { font-size: 15px; color: var(--muted); margin-top: 6px; max-width: 960px; }
-
-    /* Kad Undangan & RSVP */
+    .access-layout { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: stretch; }
+    .access-layout.has-qr { grid-template-columns: minmax(0, 1fr) 280px; }
+    .access-main { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    .access-main.access-split { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .platform-chip { display: inline-block; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 999px; border: 1px solid transparent; text-transform: uppercase; letter-spacing: 0.04em; }
+    .chip-physical { background: var(--accent-soft); color: var(--primary); border-color: var(--border); }
+    .card-physical { border-top: 4px solid var(--primary); }
+    .card-online { border-top: 4px solid var(--primary); }
+    .venue-text { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 20px; line-height: 1.55; }
+    .cred-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 14px; }
+    .cred-box { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .cred-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .cred-val { font-size: 14px; font-weight: 800; color: var(--text); word-break: break-all; }
+    .link-preview-row { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 9px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+    .link-preview-text { font-size: 12px; font-weight: 600; color: var(--primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .copy-chip { flex-shrink: 0; border: 1px solid var(--border); background: #ffffff; color: var(--text); font-family: inherit; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 8px; cursor: pointer; transition: all 0.15s; }
+    .copy-chip:hover { border-color: var(--primary); color: var(--primary); }
+    .muted-hint { font-size: 13px; color: var(--muted); font-style: italic; }
+    .qr-card { border-top: 4px solid var(--accent); align-items: center; text-align: center; justify-content: center; gap: 12px; }
+    .qr-head { font-size: 14px; font-weight: 800; color: var(--text); text-transform: uppercase; letter-spacing: 0.04em; }
+    .qr-frame { width: 196px; height: 196px; padding: 10px; background: #ffffff; border: 1px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .qr-frame:hover { transform: scale(1.03); box-shadow: var(--shadow); }
+    .qr-frame svg, .qr-frame .qr-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .qr-caption { font-size: 12px; color: var(--muted); line-height: 1.45; }
+    .qr-modal { position: fixed; inset: 0; z-index: 999; background: rgba(15, 23, 42, 0.78); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 20px; }
+    .qr-modal.open { display: flex; }
+    .qr-modal-box { background: #ffffff; border-radius: 22px; max-width: 390px; width: 100%; padding: 24px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.35); }
+    .qr-modal-top { display: flex; align-items: flex-start; justify-content: space-between; text-align: left; gap: 12px; margin-bottom: 16px; }
+    .qr-modal-title { font-size: 18px; font-weight: 800; color: var(--text); }
+    .qr-modal-sub { font-size: 12px; color: var(--muted); }
+    .qr-close { border: 0; background: #f1f5f9; color: #334155; width: 32px; height: 32px; border-radius: 10px; font-size: 20px; line-height: 1; cursor: pointer; }
+    .qr-modal-stage { width: 280px; height: 280px; max-width: 100%; margin: 0 auto 14px; padding: 12px; border: 1px solid var(--border); border-radius: 18px; background: #ffffff; }
+    .qr-modal-stage svg, .qr-modal-stage .qr-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .qr-modal-url { font-size: 12px; font-weight: 600; color: var(--primary); word-break: break-all; background: var(--bg); padding: 8px 12px; border-radius: 10px; }
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 22px; }
-    .card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 26px; box-shadow: var(--shadow); display: flex; flex-direction: column;
-    }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; }
     .card-accent { border-top: 4px solid var(--primary); }
     .card-rsvp { border-top: 4px solid var(--accent); }
     .card-icon-row { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
-    .icon-box {
-      width: 46px; height: 46px; border-radius: 13px; background: var(--primary); color: #fff;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
+    .icon-box { width: 46px; height: 46px; border-radius: 13px; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .icon-box-gold { background: var(--accent); color: #111827; }
     .card-title { font-size: 19px; font-weight: 800; color: var(--text); }
     .meta-inline { font-size: 12px; color: var(--muted); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 6px; }
-    .deadline-pill {
-      display: inline-block; margin-top: 4px; font-size: 12px; font-weight: 700;
-      color: var(--accent-text); background: var(--accent-soft); padding: 2px 10px; border-radius: 999px;
-    }
+    .deadline-pill { display: inline-block; margin-top: 4px; font-size: 12px; font-weight: 700; color: var(--accent-text); background: var(--accent-soft); padding: 2px 10px; border-radius: 999px; }
     .card-desc { font-size: 14px; color: var(--muted); margin-bottom: 22px; flex: 1; }
     .card-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-
-    /* Bahan Mesyuarat */
     .doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
-    .doc-card {
-      display: flex; align-items: flex-start; gap: 14px; padding: 18px;
-      background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
-      transition: all 0.2s ease;
-    }
+    .doc-card { display: flex; align-items: flex-start; gap: 14px; padding: 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 14px; transition: all 0.2s ease; }
     .doc-card:hover { background: #fff; border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow); }
-    .doc-badge {
-      padding: 6px 10px; border-radius: 10px; font-size: 11px; font-weight: 800;
-      letter-spacing: 0.04em; flex-shrink: 0; background: #e2e8f0; color: #1e293b;
-    }
+    .doc-badge { padding: 6px 10px; border-radius: 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; flex-shrink: 0; background: #e2e8f0; color: #1e293b; }
     .doc-badge-pdf { background: #fee2e2; color: #b91c1c; }
     .doc-badge-slide { background: #ffedd5; color: #c2410c; }
     .doc-badge-excel { background: #dcfce7; color: #15803d; }
@@ -1833,36 +1945,19 @@
     .doc-badge-folder { background: #fef3c7; color: #b45309; }
     .doc-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.4; }
     .doc-link-hint { font-size: 12px; font-weight: 600; color: var(--primary); margin-top: 6px; }
-
-    /* Jadual Agenda */
-    .table-wrap {
-      background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius);
-      overflow-x: auto; box-shadow: var(--shadow);
-    }
+    .table-wrap { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; box-shadow: var(--shadow); }
     .data-table { width: 100%; border-collapse: collapse; min-width: 600px; text-align: left; }
-    .data-table thead th {
-      background: var(--primary-dark); color: #ffffff; font-size: 12px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.06em; padding: 15px 18px;
-    }
+    .data-table thead th { background: var(--primary-dark); color: #ffffff; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 15px 18px; }
     .data-table tbody td { padding: 15px 18px; border-bottom: 1px solid var(--border); font-size: 14px; vertical-align: top; }
     .data-table tbody tr:last-child td { border-bottom: 0; }
     .data-table tbody tr:hover { background: #f8fafc; }
     .td-bil { font-weight: 800; color: var(--primary); }
     .td-masa { font-weight: 600; color: var(--muted); white-space: nowrap; }
     .td-perkara { font-weight: 600; color: var(--text); }
-    .presenter-tag {
-      display: inline-block; font-size: 12px; font-weight: 600;
-      background: #f1f5f9; color: #334155; padding: 4px 10px; border-radius: 8px;
-    }
-
-    /* Takwim */
+    .presenter-tag { display: inline-block; font-size: 12px; font-weight: 600; background: #f1f5f9; color: #334155; padding: 4px 10px; border-radius: 8px; }
     .takwim-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-    .takwim-card {
-      background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 20px;
-    }
-    .takwim-active {
-      background: #ffffff; border: 2px solid var(--primary); box-shadow: var(--shadow);
-    }
+    .takwim-card { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+    .takwim-active { background: #ffffff; border: 2px solid var(--primary); box-shadow: var(--shadow); }
     .takwim-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
     .takwim-bil { font-size: 15px; font-weight: 800; color: var(--primary); }
     .status-pill { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
@@ -1873,110 +1968,54 @@
     .st-postponed { background: #fee2e2; color: #b91c1c; }
     .takwim-date { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
     .takwim-loc { font-size: 13px; color: var(--muted); }
-
-    /* Ahli Mesyuarat */
     .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-    .member-card {
-      display: flex; align-items: center; gap: 14px; background: #ffffff;
-      border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: var(--shadow);
-    }
-    .member-avatar {
-      width: 48px; height: 48px; border-radius: 14px; background: var(--primary); color: #ffffff;
-      display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0;
-    }
-    .member-role {
-      display: inline-block; font-size: 11px; font-weight: 700; color: var(--accent-text);
-      background: var(--accent-soft); padding: 2px 8px; border-radius: 6px; margin-bottom: 4px;
-    }
+    .member-card { display: flex; align-items: center; gap: 14px; background: #ffffff; border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); }
+    .member-avatar { width: 48px; height: 48px; border-radius: 14px; background: var(--primary); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0; }
+    .member-role { display: inline-block; font-size: 11px; font-weight: 700; color: var(--accent-text); background: var(--accent-soft); padding: 2px 8px; border-radius: 6px; margin-bottom: 4px; }
     .member-name { font-size: 14px; font-weight: 800; color: var(--text); line-height: 1.3; }
     .member-pos { font-size: 12px; color: var(--muted); margin-top: 2px; }
-
-    /* Pemapar PDF Minit */
     .minute-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-    .minute-tab {
-      display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 12px;
-      border: 1px solid var(--border); background: var(--bg); color: var(--muted);
-      font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
-    }
+    .minute-tab { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--muted); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
     .minute-tab.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
-    .pdf-shell {
-      border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
-      background: #ffffff; box-shadow: var(--shadow);
-    }
-    .pdf-bar {
-      padding: 16px 20px; background: #f8fafc; border-bottom: 1px solid var(--border);
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
-    }
+    .pdf-shell { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: #ffffff; box-shadow: var(--shadow); }
+    .pdf-bar { padding: 16px 20px; background: #f8fafc; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
     .pdf-title { font-size: 15px; font-weight: 800; color: var(--text); }
     .pdf-date { font-size: 12px; color: var(--muted); }
     .pdf-stage { width: 100%; height: 680px; background: #e2e8f0; position: relative; }
     .pdf-stage iframe { width: 100%; height: 100%; border: 0; display: block; }
-    .pdf-empty {
-      height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 32px; color: #475569; background: #f1f5f9;
-    }
+    .pdf-empty { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 32px; color: #475569; background: #f1f5f9; }
     .pdf-empty h4 { font-size: 16px; font-weight: 800; color: #1e293b; margin: 12px 0 6px; }
     .pdf-empty p { font-size: 13px; max-width: 480px; }
-
-    /* Hubungi Kami */
-    .contact-banner {
-      background: #ffffff; border: 1px solid var(--border); border-radius: 20px;
-      padding: 32px; box-shadow: var(--shadow);
-    }
+    .contact-banner { background: #ffffff; border: 1px solid var(--border); border-radius: 20px; padding: 32px; box-shadow: var(--shadow); }
     .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-    .contact-card {
-      background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 20px;
-    }
+    .contact-card { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
     .contact-name { font-size: 16px; font-weight: 800; color: var(--text); }
     .contact-unit { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
     .contact-links { display: flex; flex-direction: column; gap: 6px; }
-    .c-link {
-      display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--primary);
-    }
+    .c-link { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--primary); }
     .c-link:hover { text-decoration: underline; }
-
-    /* Footer Rasmi Kerajaan */
-    .gov-footer {
-      background: ${t.footerBg}; color: rgba(255,255,255,0.86);
-      border-top: 4px solid var(--accent); padding: 50px 0 28px; margin-top: 20px;
-    }
-    .footer-grid {
-      display: grid; grid-template-columns: 1.4fr 1fr 1.2fr; gap: 32px;
-      padding-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.14);
-    }
+    .gov-footer { background: ${t.footerBg}; color: rgba(255,255,255,0.86); border-top: 4px solid var(--accent); padding: 50px 0 28px; margin-top: 20px; }
+    .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1.2fr; gap: 32px; padding-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.14); }
     .footer-logos { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
-    .footer-logo-box {
-      background: rgba(255,255,255,0.96); padding: 6px 12px; border-radius: 10px;
-      display: inline-flex; align-items: center; justify-content: center;
-    }
+    .footer-logo-box { background: rgba(255,255,255,0.96); padding: 6px 12px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; }
     .footer-logo-img { height: 44px; width: auto; object-fit: contain; display: block; }
     .footer-agency { font-size: 15px; font-weight: 800; color: #ffffff; margin-bottom: 6px; }
     .footer-addr { font-size: 13px; opacity: 0.8; line-height: 1.55; }
-    .footer-heading {
-      font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
-      color: var(--accent); margin-bottom: 12px;
-    }
+    .footer-heading { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 12px; }
     .footer-nav { display: flex; flex-direction: column; gap: 8px; }
-    .footer-nav button {
-      background: none; border: 0; color: rgba(255,255,255,0.8); text-align: left;
-      font-family: inherit; font-size: 13px; cursor: pointer; padding: 0;
-    }
+    .footer-nav button { background: none; border: 0; color: rgba(255,255,255,0.8); text-align: left; font-family: inherit; font-size: 13px; cursor: pointer; padding: 0; }
     .footer-nav button:hover { color: #ffffff; text-decoration: underline; }
     .footer-disclaimer { font-size: 12px; opacity: 0.78; line-height: 1.65; }
-    .footer-bottom {
-      padding-top: 20px; display: flex; flex-wrap: wrap; align-items: center;
-      justify-content: space-between; gap: 12px; font-size: 12px; opacity: 0.75;
+    .footer-bottom { padding-top: 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; opacity: 0.75; }
+    @media (max-width: 900px) {
+      .access-layout.has-qr { grid-template-columns: 1fr; }
     }
-
-    /* Responsif Mudah Alih */
     @media (max-width: 820px) {
       .menu-toggle { display: inline-block; }
-      .nav-links {
-        display: none; width: 100%; flex-direction: column; align-items: stretch;
-        padding: 8px 0 12px; border-top: 1px solid rgba(255,255,255,0.12);
-      }
+      .nav-links { display: none; width: 100%; flex-direction: column; align-items: stretch; padding: 8px 0 12px; border-top: 1px solid rgba(255,255,255,0.12); }
       .nav-links.open { display: flex; }
       .topbar-inner { flex-wrap: wrap; }
+      .mode-badge { margin-left: 0; }
       .footer-grid { grid-template-columns: 1fr; gap: 24px; }
       .pdf-stage { height: 440px; }
       .contact-banner { padding: 22px; }
@@ -1984,8 +2023,6 @@
   </style>
 </head>
 <body>
-
-  <!-- BAR NAVIGASI PANTAS -->
   <nav class="topbar" aria-label="Navigasi Utama">
     <div class="container topbar-inner">
       <div class="brand-mini">
@@ -1999,7 +2036,6 @@
     </div>
   </nav>
 
-  <!-- BANNER UTAMA (HERO) -->
   <header class="hero">
     ${state.showPattern ? '<div class="hero-pattern"></div>' : ''}
     <div class="container hero-inner">
@@ -2008,18 +2044,19 @@
       ${state.dept ? `<div class="dept-label">${esc(state.dept)}</div>` : ''}
       <h1 class="hero-title">${esc(state.title)}</h1>
       ${state.subtitle ? `<p class="hero-sub">${esc(state.subtitle)}</p>` : ''}
-
       <div class="info-strip">
         ${state.dateText ? `<div class="info-pill"><div class="info-lbl">Tarikh</div><div class="info-val">${esc(state.dateText)}</div></div>` : ''}
         ${state.timeText ? `<div class="info-pill"><div class="info-lbl">Masa</div><div class="info-val">${esc(state.timeText)}</div></div>` : ''}
-        ${state.venue ? `<div class="info-pill"><div class="info-lbl">Tempat / Mod</div><div class="info-val">${esc(state.venue)}</div></div>` : ''}
+        ${hasPhysical && state.venue ? `<div class="info-pill"><div class="info-lbl">${mode === 'hybrid' ? 'Lokasi Fizikal' : 'Tempat'}</div><div class="info-val">${esc(state.venue)}</div>${state.mapUrl ? `<a href="${esc(state.mapUrl)}" target="_blank" rel="noopener noreferrer" class="info-mini-link">Peta Lokasi &nearr;</a>` : ''}</div>` : ''}
+        ${hasOnline ? `<div class="info-pill"><div class="info-lbl">Platform Talian</div><div class="info-val">${esc(platformName)}</div>${state.online.url ? `<a href="${esc(state.online.url)}" target="_blank" rel="noopener noreferrer" class="info-mini-link">Sertai Sekarang &nearr;</a>` : ''}</div>` : ''}
         ${state.chair ? `<div class="info-pill"><div class="info-lbl">Pengerusi</div><div class="info-val">${esc(state.chair)}</div></div>` : ''}
       </div>
-
       <div class="hero-bottom">
         <div class="hero-ctas">
+          ${hasOnline && state.online.url ? `<a href="${esc(state.online.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-online" style="background:${pMeta.btn};"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>${esc(state.online.btnText || `Sertai ${platformName}`)}</a>` : ''}
           ${state.sections.rsvp ? `<a href="${esc(state.rsvp.url || '#')}" target="_blank" rel="noopener noreferrer" class="btn btn-gold">${esc(state.rsvp.btnText || 'Sahkan Kehadiran (RSVP)')}</a>` : ''}
-          ${state.sections.materials ? `<button type="button" onclick="goSec('bahan')" class="btn btn-hero-ghost">Lihat Bahan Mesyuarat &darr;</button>` : ''}
+          ${showOnlineSection && qrMarkup ? `<button type="button" onclick="openQrZoom()" class="btn btn-hero-ghost">Papar Kod QR</button>` : ''}
+          ${state.sections.materials ? `<button type="button" onclick="goSec('bahan')" class="btn btn-hero-ghost">Lihat Bahan &darr;</button>` : ''}
         </div>
         ${state.showCountdown && state.countdownDate ? `
         <div class="countdown-box" id="countdownBox" aria-label="Kiraan Detik Mesyuarat">
@@ -2035,8 +2072,8 @@
     </div>
   </header>
 
-  <!-- KANDUNGAN UTAMA -->
   <main>
+    ${onlineSectionHtml}
     ${actionSectionHtml}
     ${materialsHtml}
     ${agendaHtml}
@@ -2045,6 +2082,9 @@
     ${minutesHtml}
     ${contactHtml}
   </main>
+
+  ${qrModalHtml}
+
   <footer class="gov-footer">
     <div class="container">
       <div class="footer-grid">
@@ -2057,20 +2097,17 @@
           <div class="footer-agency">${esc(state.agency)}</div>
           <div class="footer-addr">${esc(state.dept)}<br/>${esc(state.footer.address)}</div>
         </div>
-
         <div>
           <div class="footer-heading">Pautan Pantas</div>
           <div class="footer-nav">
             ${navLinks.map(l => `<button type="button" onclick="goSec('${l.id}')">&rsaquo; ${esc(l.label)}</button>`).join('')}
           </div>
         </div>
-
         <div>
           <div class="footer-heading">Penafian &amp; Kerahsiaan</div>
           <p class="footer-disclaimer">${esc(state.footer.disclaimer)}</p>
         </div>
       </div>
-
       <div class="footer-bottom">
         <div>${esc(state.footer.copyright)}</div>
         <div>Tarikh Kemas Kini Terakhir: <strong>${esc(state.footer.updated)}</strong></div>
@@ -2089,7 +2126,37 @@
       var nav = document.getElementById('navMenu');
       if (nav) nav.classList.toggle('open');
     }
-
+    function openQrZoom() {
+      var m = document.getElementById('qrZoomModal');
+      if (m) m.classList.add('open');
+    }
+    function closeQrZoom() {
+      var m = document.getElementById('qrZoomModal');
+      if (m) m.classList.remove('open');
+    }
+    function copyPortalText(txt, btn) {
+      function markCopied() {
+        if (!btn) return;
+        var orig = btn.textContent;
+        btn.textContent = '✓ Disalin';
+        setTimeout(function() { btn.textContent = orig; }, 1600);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(markCopied).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+      function fallbackCopy() {
+        var ta = document.createElement('textarea');
+        ta.value = txt;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); markCopied(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    }
     var MINUTES_DATA = ${safeMinutesJson};
     function selectMinute(index, btn) {
       var item = MINUTES_DATA[index];
@@ -2097,32 +2164,19 @@
       var tabs = document.querySelectorAll('.minute-tab');
       for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
       if (btn) btn.classList.add('active');
-
       var tEl = document.getElementById('pdfTitle');
       var dEl = document.getElementById('pdfDate');
       var oEl = document.getElementById('pdfOpenBtn');
       var fEl = document.getElementById('pdfFrame');
       var eEl = document.getElementById('pdfEmpty');
-
       if (tEl) tEl.textContent = item.title || '';
       if (dEl) dEl.textContent = item.date || '';
-      if (oEl) {
-        oEl.href = item.rawUrl || '#';
-        oEl.style.display = item.rawUrl ? 'inline-flex' : 'none';
-      }
+      if (oEl) { oEl.href = item.rawUrl || '#'; oEl.style.display = item.rawUrl ? 'inline-flex' : 'none'; }
       if (fEl && eEl) {
-        if (item.embedUrl) {
-          fEl.src = item.embedUrl;
-          fEl.style.display = 'block';
-          eEl.style.display = 'none';
-        } else {
-          fEl.src = 'about:blank';
-          fEl.style.display = 'none';
-          eEl.style.display = 'flex';
-        }
+        if (item.embedUrl) { fEl.src = item.embedUrl; fEl.style.display = 'block'; eEl.style.display = 'none'; }
+        else { fEl.src = 'about:blank'; fEl.style.display = 'none'; eEl.style.display = 'flex'; }
       }
     }
-
     (function initCountdown() {
       var targetStr = ${JSON.stringify(state.showCountdown ? state.countdownDate : '')};
       if (!targetStr) return;
@@ -2157,7 +2211,6 @@
 </html>`;
     }
 
-
     function schedulePreview() {
       clearTimeout(previewTimer);
       previewTimer = setTimeout(updatePreviewNow, 180);
@@ -2167,7 +2220,6 @@
       const html = generatePortalHTML();
       const iframe = document.getElementById('previewFrame');
       if (iframe) iframe.srcdoc = html;
-
       const kb = (new Blob([html]).size / 1024).toFixed(1);
       const badge = document.getElementById('codeSizeBadge');
       if (badge) {
@@ -2189,16 +2241,12 @@
         activeBtn.classList.add('bg-white', 'text-slate-800', 'shadow-sm');
         activeBtn.classList.remove('text-slate-500');
       }
-      if (mode === 'desktop') wrap.style.maxWidth = '100%';
-      if (mode === 'tablet') wrap.style.maxWidth = '780px';
-      if (mode === 'mobile') wrap.style.maxWidth = '390px';
+      wrap.style.maxWidth = mode === 'desktop' ? '100%' : mode === 'tablet' ? '780px' : '390px';
     }
 
     function openFullPreviewTab() {
-      const html = generatePortalHTML();
-      const blob = new Blob([html], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
+      const blob = new Blob([generatePortalHTML()], { type: 'text/html' });
+      window.open(URL.createObjectURL(blob), '_blank');
     }
 
     function openExportModal() {
@@ -2209,7 +2257,6 @@
       document.getElementById('exportSizeWarning').classList.toggle('hidden', Number(kb) <= 300);
       openModal('exportModal');
     }
-
 
     function copyGeneratedCode() {
       const textarea = document.getElementById('generatedCodeOutput');
@@ -2225,15 +2272,13 @@
     }
 
     function downloadGeneratedHtml() {
-      const html = generatePortalHTML();
       const slug = (state.title || 'portal-mesyuarat').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
-      triggerDownload(new Blob([html], { type: 'text/html;charset=utf-8' }), `${slug || 'portal-mesyuarat'}.html`);
+      triggerDownload(new Blob([generatePortalHTML()], { type: 'text/html;charset=utf-8' }), `${slug || 'portal-mesyuarat'}.html`);
       showToast('Fail HTML portal berjaya dimuat turun!');
     }
 
     function exportProjectJson() {
-      const json = JSON.stringify(state, null, 2);
-      triggerDownload(new Blob([json], { type: 'application/json' }), 'projek-portal-mesyuarat.json');
+      triggerDownload(new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }), 'projek-portal-mesyuarat.json');
       showToast('Fail projek (.json) berjaya disimpan!');
     }
 
@@ -2244,7 +2289,18 @@
       reader.onload = (e) => {
         try {
           const parsed = JSON.parse(e.target.result);
-          state = Object.assign(getDefaultState(), parsed);
+          const def = getDefaultState();
+          state = {
+            ...def,
+            ...parsed,
+            online: { ...def.online, ...(parsed.online || {}) },
+            sections: { ...def.sections, ...(parsed.sections || {}) },
+            invitation: { ...def.invitation, ...(parsed.invitation || {}) },
+            rsvp: { ...def.rsvp, ...(parsed.rsvp || {}) },
+            materials: { ...def.materials, ...(parsed.materials || {}) },
+            contact: { ...def.contact, ...(parsed.contact || {}) },
+            footer: { ...def.footer, ...(parsed.footer || {}) }
+          };
           hydrateAllInputs();
           updatePreviewNow();
           closeModal('projectModal');
@@ -2275,12 +2331,10 @@
       setTimeout(() => URL.revokeObjectURL(a.href), 1500);
     }
 
-
     function switchEditorTab(tabId) {
       document.querySelectorAll('.editor-panel').forEach(p => p.classList.add('hidden'));
       const panel = document.getElementById(`tab-${tabId}`);
       if (panel) panel.classList.remove('hidden');
-
       document.querySelectorAll('.editor-tab-btn').forEach(btn => {
         if (btn.dataset.tab === tabId) {
           btn.classList.add('tab-btn-active');
@@ -2314,15 +2368,8 @@
       }
     }
 
-    function openModal(id) {
-      const m = document.getElementById(id);
-      if (m) { m.classList.remove('hidden'); m.classList.add('flex'); }
-    }
-    function closeModal(id) {
-      const m = document.getElementById(id);
-      if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
-    }
-
+    function openModal(id) { const m = document.getElementById(id); if (m) { m.classList.remove('hidden'); m.classList.add('flex'); } }
+    function closeModal(id) { const m = document.getElementById(id); if (m) { m.classList.add('hidden'); m.classList.remove('flex'); } }
 
     function hydrateAllInputs() {
       document.getElementById('inpAgency').value = state.agency || '';
@@ -2332,6 +2379,7 @@
       document.getElementById('inpDateText').value = state.dateText || '';
       document.getElementById('inpTimeText').value = state.timeText || '';
       document.getElementById('inpVenue').value = state.venue || '';
+      document.getElementById('inpMapUrl').value = state.mapUrl || '';
       document.getElementById('inpChair').value = state.chair || '';
       document.getElementById('inpCountdownDate').value = state.countdownDate || '';
       document.getElementById('chkCountdown').checked = Boolean(state.showCountdown);
@@ -2342,6 +2390,17 @@
       document.getElementById('inpLayoutWidth').value = state.layoutWidth || 'full';
       document.getElementById('inpOverlay').value = state.bannerOverlay || 68;
       document.getElementById('lblOverlay').textContent = state.bannerOverlay || 68;
+
+      document.getElementById('chkShowOnlineSection').checked = Boolean(state.sections.onlineAccess);
+      document.getElementById('inpOnlinePlatform').value = state.online.platform || 'Google Meet';
+      document.getElementById('inpCustomPlatform').value = state.online.customPlatform || '';
+      document.getElementById('inpOnlineBtnText').value = state.online.btnText || '';
+      document.getElementById('inpOnlineUrl').value = state.online.url || '';
+      document.getElementById('inpOnlineId').value = state.online.meetingId || '';
+      document.getElementById('inpOnlinePass').value = state.online.passcode || '';
+      document.getElementById('inpOnlineNote').value = state.online.note || '';
+      document.getElementById('inpQrMode').value = state.online.qrMode || 'auto';
+      document.getElementById('inpQrCaption').value = state.online.qrCaption || '';
 
       document.getElementById('chkShowInvitation').checked = state.sections.invitation;
       document.getElementById('chkShowRsvp').checked = state.sections.rsvp;
@@ -2374,6 +2433,7 @@
       document.getElementById('inpFooterUpdated').value = state.footer.updated || '';
 
       syncImageInputLabels();
+      syncMeetingModeUi();
       renderThemePresets();
       renderMaterialsEditor();
       renderAgendaEditor();
@@ -2382,7 +2442,6 @@
       renderMinutesEditor();
       renderContactsEditor();
     }
-
 
     window.addEventListener('DOMContentLoaded', () => {
       hydrateAllInputs();
